@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#101318">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Amalan Muslim RC72">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Amalan Muslim — RC72 iPad</title>
+<style>
+:root{--bg:#0d1015;--panel:#171c24;--line:#303743;--text:#f2f4f7;--muted:#aeb6c2;--accent:#4da3ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;height:100%;overflow:hidden}
+body{padding-top:env(safe-area-inset-top)}
+button,input{font:inherit}
+#app{height:100%;display:flex;flex-direction:column}
+header{height:58px;flex:none;background:#11151b;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:6px 10px}
+header h1{font-size:17px;margin:0;white-space:nowrap;flex:1}
+.btn{border:1px solid #3a4350;background:#202630;color:#fff;border-radius:11px;min-height:40px;padding:7px 12px;cursor:pointer}
+.btn:active{transform:scale(.98)}
+#main{flex:1;min-height:0;display:flex;overflow:hidden}
+#nav{width:240px;background:#131820;border-right:1px solid var(--line);overflow:auto;padding:10px}
+#nav h2{font-size:13px;color:var(--muted);margin:4px 4px 10px}
+#nav button{width:100%;text-align:left;margin:3px 0}
+#viewer{flex:1;min-width:0;position:relative;overflow:auto;background:#080a0d;scroll-behavior:smooth}
+#pages{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 10px 100px}
+.page{background:white;box-shadow:0 2px 12px #0008;max-width:100%;touch-action:pan-x pan-y pinch-zoom}
+.page canvas{display:block;max-width:100%;height:auto}
+#empty{max-width:700px;margin:10vh auto;padding:28px;text-align:center;color:var(--muted)}
+#empty h2{color:#fff}
+#tools{position:fixed;z-index:20;right:12px;bottom:14px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:90vw}
+#tools .btn{min-width:42px}
+#status{position:fixed;z-index:19;left:12px;bottom:14px;background:#111a;border:1px solid #39414d;backdrop-filter:blur(12px);padding:8px 11px;border-radius:10px;font-size:12px;color:#d8dee8}
+#file{display:none}
+#urlbox{display:flex;gap:6px;margin-bottom:8px}
+#url{min-width:0;flex:1;background:#0d1117;border:1px solid #39414d;color:#fff;border-radius:9px;padding:9px}
+#media{position:fixed;left:12px;top:70px;z-index:30;background:#111c;border:1px solid #39414d;border-radius:12px;padding:7px;backdrop-filter:blur(10px);display:none}
+#media audio{width:260px;max-width:70vw}
+@media(max-width:800px){#nav{width:190px}header h1{font-size:15px}.btn{padding:6px 9px}}
+@media(orientation:portrait) and (min-width:700px){#nav{width:220px}}
+.fullscreen #nav{width:0;padding:0;border:0;overflow:hidden}
+.fullscreen header{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <h1>Amalan Muslim — RC72</h1>
+  <button class="btn" id="openBtn">📄 Buka PDF</button>
+  <button class="btn" id="fsBtn">⛶</button>
+  <input id="file" type="file" accept="application/pdf">
+</header>
+<div id="main">
+  <aside id="nav">
+    <h2>PDF • Quick Navigation</h2>
+    <div id="urlbox"><input id="url" placeholder="URL PDF (opsional)"><button class="btn" id="loadUrl">Buka</button></div>
+    <div id="thumbs"></div>
+  </aside>
+  <section id="viewer">
+    <div id="empty">
+      <h2>RC72 iPad PDF Engine</h2>
+      <p>Rendering diprioritaskan untuk 3 halaman pertama dan halaman sekitar posisi terakhir. Halaman lain dirender saat dibutuhkan.</p>
+      <button class="btn" onclick="file.click()">Pilih PDF</button>
+    </div>
+    <div id="pages"></div>
+  </section>
+</div>
+<div id="media"><audio id="audio" controls playsinline></audio></div>
+<div id="status">Siap</div>
+<div id="tools">
+  <button class="btn" id="prev">◀</button>
+  <button class="btn" id="next">▶</button>
+  <button class="btn" id="zoomOut">−</button>
+  <button class="btn" id="zoomIn">+</button>
+  <button class="btn" id="focusBtn">🎯 Auto Fokus</button>
+  <button class="btn" id="scrollBtn">↕ Auto Scroll</button>
+  <button class="btn" id="audioBtn">🎧 Audio</button>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+<script>
+(async()=>{
+const pdfjs = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
+pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+const $=id=>document.getElementById(id), viewer=$("viewer"), pages=$("pages"), thumbs=$("thumbs"), status=$("status");
+let pdf=null, scale=1.35, current=1, rendered=new Set(), renderQueue=new Set(), autoFocus=false, autoScroll=false, scrollTimer=null;
+const cacheKey="RC72_LAST_PAGE";
+function msg(s){status.textContent=s}
+function clear(){pages.innerHTML="";thumbs.innerHTML="";rendered.clear();renderQueue.clear()}
+async function loadPDF(src){
+ clear(); msg("Membuka PDF…");
+ try{
+  pdf=typeof src==="string"?await pdfjs.getDocument({url:src}).promise:await pdfjs.getDocument({data:src}).promise;
+  localStorage.setItem("RC72_PDF_SOURCE", typeof src==="string"?src:"");
+  const last=Math.min(pdf.numPages,Math.max(1,Number(localStorage.getItem(cacheKey)||1)));
+  $("empty").style.display="none";
+  for(let i=1;i<=Math.min(3,pdf.numPages);i++) await ensurePage(i);
+  if(last>3) await ensurePage(last);
+  await ensurePage(Math.min(pdf.numPages,last+1));
+  if(last>1) await ensurePage(last-1);
+  current=last; scrollToPage(last,false); buildNav();
+  msg(`PDF siap • ${pdf.numPages} halaman`);
+ }catch(e){msg("Gagal membuka PDF"); console.error(e)}
+}
+async function ensurePage(n){
+ if(!pdf||n<1||n>pdf.numPages||rendered.has(n)||renderQueue.has(n)) return;
+ renderQueue.add(n);
+ const holder=document.createElement("div"); holder.className="page"; holder.dataset.page=n; holder.style.minHeight="60px";
+ const label=document.createElement("div"); label.style.cssText="color:#667;padding:8px;text-align:center;font:12px sans-serif"; label.textContent=`Halaman ${n}…`;
+ holder.appendChild(label);
+ pages.appendChild(holder);
+ try{
+  const p=await pdf.getPage(n);
+  const vp=p.getViewport({scale});
+  const canvas=document.createElement("canvas"), ctx=canvas.getContext("2d",{alpha:false});
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  canvas.width=Math.floor(vp.width*dpr); canvas.height=Math.floor(vp.height*dpr);
+  canvas.style.width=vp.width+"px"; canvas.style.height=vp.height+"px";
+  holder.innerHTML=""; holder.appendChild(canvas);
+  await p.render({canvasContext:ctx,viewport:vp,transform:[dpr,0,0,dpr,0,0],intent:"display"}).promise;
+  rendered.add(n);
+ }catch(e){holder.remove();console.error(e)}
+ finally{renderQueue.delete(n)}
+}
+function scrollToPage(n,smooth=true){
+ const el=pages.querySelector(`[data-page="${n}"]`);
+ if(el) el.scrollIntoView({behavior:smooth?"smooth":"auto",block:"start"});
+ current=n; localStorage.setItem(cacheKey,n); msg(`Halaman ${n}/${pdf?.numPages||"—"}`);
+ [n-1,n,n+1].forEach(x=>ensurePage(x));
+}
+function buildNav(){
+ thumbs.innerHTML="";
+ const max=Math.min(pdf.numPages,60);
+ for(let i=1;i<=max;i++){const b=document.createElement("button");b.className="btn";b.textContent="Halaman "+i;b.onclick=()=>scrollToPage(i);thumbs.appendChild(b)}
+ if(pdf.numPages>60){const p=document.createElement("div");p.style.cssText="color:#8f98a5;font-size:12px;padding:8px";p.textContent=`+ ${pdf.numPages-60} halaman dimuat saat diperlukan`;thumbs.appendChild(p)}
+}
+viewer.addEventListener("scroll",()=>{
+ if(!pdf)return;
+ let best=1,dist=Infinity;
+ for(const el of pages.children){const d=Math.abs(el.getBoundingClientRect().top-viewer.getBoundingClientRect().top);if(d<dist){dist=d;best=Number(el.dataset.page)}}
+ if(best!==current){current=best;localStorage.setItem(cacheKey,current);[current-1,current,current+1].forEach(x=>ensurePage(x))}
+ if(autoFocus) setTimeout(()=>scrollToPage(current,false),50);
+});
+$("openBtn").onclick=()=>file.click();
+$("file").onchange=async e=>{const f=e.target.files[0];if(f)await loadPDF(new Uint8Array(await f.arrayBuffer()))};
+$("loadUrl").onclick=()=>{if($("url").value.trim())loadPDF($("url").value.trim())};
+$("prev").onclick=()=>scrollToPage(Math.max(1,current-1));
+$("next").onclick=()=>scrollToPage(Math.min(pdf?.numPages||current,current+1));
+$("zoomIn").onclick=async()=>{scale=Math.min(3,scale+.15);if(pdf){const keep=current;clear();for(let i=Math.max(1,keep-1);i<=Math.min(pdf.numPages,keep+1);i++)await ensurePage(i);scrollToPage(keep,false)}};
+$("zoomOut").onclick=async()=>{scale=Math.max(.7,scale-.15);if(pdf){const keep=current;clear();for(let i=Math.max(1,keep-1);i<=Math.min(pdf.numPages,keep+1);i++)await ensurePage(i);scrollToPage(keep,false)}};
+$("focusBtn").onclick=()=>{autoFocus=!autoFocus;$("focusBtn").textContent=autoFocus?"🎯 Fokus ON":"🎯 Auto Fokus";};
+$("scrollBtn").onclick=()=>{autoScroll=!autoScroll;$("scrollBtn").textContent=autoScroll?"↕ Scroll ON":"↕ Auto Scroll";if(autoScroll){clearInterval(scrollTimer);scrollTimer=setInterval(()=>viewer.scrollBy({top:.7}),50)}else clearInterval(scrollTimer)};
+$("audioBtn").onclick=()=>{const m=$("media");m.style.display=m.style.display==="block"?"none":"block";if(m.style.display==="block")msg("Pilih/masukkan audio dari browser bila diperlukan")};
+$("fsBtn").onclick=()=>{document.documentElement.requestFullscreen?.();document.body.classList.toggle("fullscreen")};
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(console.warn);
+})();
+</script>
+</body>
+</html>
