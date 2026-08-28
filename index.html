@@ -1012,9 +1012,12 @@ body.rc71-native-pip-active{
 }
 </style>
 
-<style id="rc72-yasin-opening-fix">
-/* RC72 FINAL: keep Yasin ayah text clear of the numbered circles on iPad/iOS */
-#surat-yasin-ziarah .ayah {
+<style id="rc72-surah-opening-fix">
+/* RC72 FINAL: numbered-circle clearance for Yasin, Al-Waqi'ah and Al-Mulk on iPad/iOS.
+   Keep the ayah number visually separate from the beginning of the Latin text. */
+#surat-yasin-ziarah .ayah,
+#surat-waqiah .ayah,
+#surat-mulk .ayah {
   position: relative !important;
   padding-left: 78px !important;
   padding-right: 8px !important;
@@ -1023,7 +1026,9 @@ body.rc71-native-pip-active{
   overflow: visible !important;
   text-indent: 0 !important;
 }
-#surat-yasin-ziarah .ayah-no {
+#surat-yasin-ziarah .ayah-no,
+#surat-waqiah .ayah-no,
+#surat-mulk .ayah-no {
   position: absolute !important;
   left: 10px !important;
   top: 9px !important;
@@ -1033,14 +1038,18 @@ body.rc71-native-pip-active{
   pointer-events: none !important;
 }
 @media (max-width: 759px) {
-  #surat-yasin-ziarah .ayah { padding-left: 72px !important; }
+  #surat-yasin-ziarah .ayah,
+  #surat-waqiah .ayah,
+  #surat-mulk .ayah { padding-left: 72px !important; }
 }
 @media (min-width: 760px) {
-  #surat-yasin-ziarah .ayah { padding-left: 82px !important; }
+  #surat-yasin-ziarah .ayah,
+  #surat-waqiah .ayah,
+  #surat-mulk .ayah { padding-left: 82px !important; }
 }
 </style>
 </head>
-<body data-revision="RC72-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE" data-amalan-build="RC72-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE">
+<body data-revision="RC72-V6.1.3-SURAH-NUMBER-CLEARANCE" data-amalan-build="RC72-V6.1.3-SURAH-NUMBER-CLEARANCE">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
 <button aria-label="Tambah hitungan dzikir" class="counter-fab" id="counterFab" type="button"><span class="counter-value" id="counterValue">0 / 33</span><span class="counter-mini-progress"><i id="counterProgress"></i></span><span class="counter-label" id="counterLabel">Dzikir</span><span class="counter-hint">Ketuk +1</span></button>
