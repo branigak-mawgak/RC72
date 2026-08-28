@@ -1,15 +1,7 @@
-# RC72 — iPad-first PDF PWA
+# RC72 — Amalan Muslim iPad-first PDF PWA
 
-RC72 adalah versi baru dan terpisah dari RC71.
+RC72 is a separate rebuild from RC71.
 
-Fokus:
-- iPad/iOS landscape
-- PDF.js rendering bertahap
-- 3 halaman pertama diprioritaskan
-- current page ±1 diprioritaskan
-- zoom in/out
-- quick navigation
-- last-page position
-- service-worker cache version baru
+PDF reader: PDF.js canvas rendering, first 3 pages prioritized, last-page restore with current ±1 pre-render, retina DPR up to 2×, progressive rendering, zoom, and iPad/iOS Safari support.
 
-Catatan: file isi Amalan Muslim dari RC71 belum disalin karena sumber `index.html` asli tidak tersedia sebagai upload di percakapan. Engine RC72 siap menerima PDF melalui tombol **Buka PDF**.
+Deploy all files at repository root using GitHub Pages: `main` / `(root)`.
