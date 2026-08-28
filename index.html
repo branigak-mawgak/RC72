@@ -1048,8 +1048,55 @@ body.rc71-native-pip-active{
   #surat-mulk .ayah { padding-left: 82px !important; }
 }
 </style>
+
+<style id="rc72-strong-ayah-clearance">
+/* RC72 FINAL: hard clearance for Al-Waqi'ah + Al-Mulk ayah numbers on iPad/iOS.
+   The number is decorative/absolute; the reading text must always start after it. */
+#surat-waqiah p.ayah, #surat-mulk p.ayah {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-inline-start: 104px !important;
+  padding-inline-end: 12px !important;
+  margin-inline-start: 0 !important;
+  margin-inline-end: 0 !important;
+  text-indent: 0 !important;
+  overflow: visible !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+  min-height: 52px !important;
+}
+#surat-waqiah p.ayah .ayah-no, #surat-mulk p.ayah .ayah-no {
+  position: absolute !important;
+  inset-inline-start: 14px !important;
+  inset-inline-end: auto !important;
+  top: 10px !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  box-sizing: border-box !important;
+  display: grid !important;
+  place-items: center !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+/* Keep every generated karaoke/phrase span inside the text column. */
+#surat-waqiah p.ayah > .semantic, #surat-mulk p.ayah > .semantic {
+  position: static !important;
+}
+@media (max-width: 759px) {
+  #surat-waqiah p.ayah, #surat-mulk p.ayah { padding-inline-start: 92px !important; }
+}
+@media (min-width: 760px) {
+  #surat-waqiah p.ayah, #surat-mulk p.ayah { padding-inline-start: 104px !important; }
+}
+</style>
 </head>
-<body data-revision="RC72-V6.1.3-SURAH-NUMBER-CLEARANCE" data-amalan-build="RC72-V6.1.3-SURAH-NUMBER-CLEARANCE">
+<body data-revision="RC72-V6.1.5-WAQIAH-MULK-HARD-CLEARANCE" data-amalan-build="RC72-V6.1.5-WAQIAH-MULK-HARD-CLEARANCE">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
 <button aria-label="Tambah hitungan dzikir" class="counter-fab" id="counterFab" type="button"><span class="counter-value" id="counterValue">0 / 33</span><span class="counter-mini-progress"><i id="counterProgress"></i></span><span class="counter-label" id="counterLabel">Dzikir</span><span class="counter-hint">Ketuk +1</span></button>
