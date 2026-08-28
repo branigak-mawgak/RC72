@@ -1,1 +1,1 @@
-{"name":"Amalan Muslim RC72","short_name":"RC72","start_url":"./","scope":"./","display":"fullscreen","orientation":"landscape","theme_color":"#0c6b4f","background_color":"#edf4ef","icons":[{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+{"name":"Amalan Muslim RC72","short_name":"RC72","start_url":"./","display":"standalone","background_color":"#0b1713","theme_color":"#0b1713"}
