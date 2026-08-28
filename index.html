@@ -1062,7 +1062,45 @@ footer.bottom .nav-fullscreen-btn,footer.bottom #themeNavBtn,footer.bottom #smar
 #doa-tahlil .doa-tahlil-para.c6{color:var(--c6)!important}
 #doa-tahlil .doa-tahlil-para.c7{color:var(--c7)!important}
 @media(max-width:900px){#doa-tahlil .doa-tahlil-para{line-height:1.44!important;margin-bottom:.42em!important}}
-</style></head>
+</style>
+<style id="rc72-ipad-portrait-width-finetune">
+/* RC72: iPad portrait reading width. Some iPad Safari configurations expose a
+   CSS viewport around 512px wide on a 1024px screenshot. Do not let the
+   desktop 760px breakpoint leave the book at the old 8cm width. */
+@media (orientation: portrait) and (min-height: 600px) {
+  .reader-wrap {
+    width: 100%!important;
+    max-width: none!important;
+    padding-left: 6px!important;
+    padding-right: 6px!important;
+    padding-bottom: 120px!important;
+  }
+  .book {
+    width: min(680px, calc(100vw - 12px))!important;
+    max-width: min(680px, calc(100vw - 12px))!important;
+    margin-left: auto!important;
+    margin-right: auto!important;
+    padding-left: 18px!important;
+    padding-right: 18px!important;
+    border-radius: 10px!important;
+  }
+  .chapter, .para, .wirid-sholat-para {
+    width: 100%!important;
+    max-width: none!important;
+  }
+  .para {
+    padding-left: 8px!important;
+    padding-right: 8px!important;
+  }
+  .ayah {
+    padding-left: 48px!important;
+  }
+  .ayah-no {
+    left: 7px!important;
+  }
+}
+</style>
+</head>
 <body data-amalan-build="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER" data-revision="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
