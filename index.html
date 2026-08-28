@@ -10,15 +10,15 @@ Do not alter the Waqi'ah 74–96 numbering/content without a new revision.
 -->
 <!-- RC54 STABLE CANONICAL: legacy patch cleanup; canonical gallery + editor retained. -->
 <!DOCTYPE html>
-<!-- RC72 V6.1.4 PDF VISUAL AUTOSCROLL CLOSE FIX V2 -->
-<!-- RC72 V6.1.4 PDF CLOSE CONTROL FIX — PDF overlay z-index + navigation isolation. -->
+<!-- RC71 V6.1.4 PDF VISUAL AUTOSCROLL CLOSE FIX V2 -->
+<!-- RC71 V6.1.4 PDF CLOSE CONTROL FIX — PDF overlay z-index + navigation isolation. -->
 <!-- RC46 -->
-<html lang="id" data-build="RC72-iPad-first-PDF-revision">
+<html lang="id" data-build="personal-v1.0-rc54-stable-canonical">
 <head>
 <meta name="amalan-build" content="RC54-STABLE-CANONICAL">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Amalan Muslim — RC72 iPad-first PDF PWA</title>
+<title>Amalan Muslim — RC72 iPad PDF PWA</title>
 <script id="tuned-safe-storage">
 (function(){
   'use strict';
@@ -724,7 +724,7 @@ body.rc71-media-fullscreen-active{overflow:hidden!important}
 </style>
 
 <style id="rc71-media-width-fix">
-/* RC72 MEDIA WIDTH FIX
+/* RC71 MEDIA WIDTH FIX
    Root cause: flex title had an implicit min-content width and the player
    shell used content-box sizing, allowing padding/border to exceed the
    viewport. */
@@ -774,7 +774,7 @@ body.rc71-media-fullscreen-active{overflow:hidden!important}
 
 </style>
 <style id="rc71-v2-media-finetune">
-/* RC72 V2 — final media layout guard.
+/* RC71 V2 — final media layout guard.
    Never allow a filename, player control, or media shell to expand the viewport. */
 html,body{max-width:100%;overflow-x:hidden!important}
 .media-card,
@@ -849,7 +849,7 @@ html,body{max-width:100%;overflow-x:hidden!important}
 </style>
 
 <style id="rc71-v3-media-pip-background-fix">
-/* RC72 V3 — player width is always constrained to the viewport. */
+/* RC71 V3 — player width is always constrained to the viewport. */
 #mediaPlayerOverlay,
 #mediaPlayerOverlay * {
   box-sizing: border-box !important;
@@ -892,7 +892,7 @@ html,body{max-width:100%;overflow-x:hidden!important}
 }
 
 /*
- * RC72 V3 — when native PiP is actually active, the HTML player overlay
+ * RC71 V3 — when native PiP is actually active, the HTML player overlay
  * must cease to be a visual layer. The video is owned by the system PiP
  * window, so the underlying HTML page must remain visible.
  */
@@ -922,7 +922,7 @@ body.rc71-native-pip-active {
 
 
 <style id="rc71-v4-media-pip-clean">
-/* RC72 V4 — final media layout + native PiP background fix. */
+/* RC71 V4 — final media layout + native PiP background fix. */
 #mediaPlayerOverlay,
 #mediaPlayerOverlay *{box-sizing:border-box!important}
 
@@ -1012,8 +1012,16 @@ body.rc71-native-pip-active{
 }
 </style>
 
+
+<style id="rc72-ipad-paragraph-fix">
+/* RC72: compact, readable paragraph/ayah spacing on iPad */
+.para{margin-top:0!important;margin-bottom:4px!important;padding-top:3px!important;padding-bottom:3px!important;line-height:1.48!important;}
+.para.ayah{margin-bottom:3px!important;}
+.chapter .subhead{margin-top:16px!important;margin-bottom:7px!important;}
+@media (min-width:760px){.para{padding-top:4px!important;padding-bottom:4px!important;line-height:1.5!important;}}
+</style>
 </head>
-<body data-revision="RC72-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE" data-amalan-build="RC72-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE">
+<body data-revision="RC71-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE" data-amalan-build="RC71-V6.1.2-NAV-GALERI-FULLNAV-FINETUNE">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
 <button aria-label="Tambah hitungan dzikir" class="counter-fab" id="counterFab" type="button"><span class="counter-value" id="counterValue">0 / 33</span><span class="counter-mini-progress"><i id="counterProgress"></i></span><span class="counter-label" id="counterLabel">Dzikir</span><span class="counter-hint">Ketuk +1</span></button>
@@ -1600,7 +1608,7 @@ function normalizeMenu(){
   for(const d of DEFAULT){if(!seen.has(d.id)){ordered.push({...d});seen.add(d.id);}}
   menu=ordered;
 }
-// One-time migration: establish the requested RC72 V2 order while retaining labels/icons/visibility.
+// One-time migration: establish the requested RC71 V2 order while retaining labels/icons/visibility.
 if(!read(migration,false)){
   const stored=Array.isArray(menu)?menu:[];
   const byId=new Map(stored.filter(x=>x?.id).map(x=>[x.id,x]));
@@ -2793,7 +2801,7 @@ window.renderBlocks=(container,blocks)=>{if(!container)return;container.replaceC
 <script id="rc71-import-storage-engine">
 (function(){
 'use strict';
-const DB_NAME='RC72_IMPORT_STORAGE',DB_VER=2;
+const DB_NAME='RC71_IMPORT_STORAGE',DB_VER=2;
 let dbp;
 function openDB(){if(dbp)return dbp;dbp=new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,DB_VER);
 r.onupgradeneeded=()=>{const d=r.result;
@@ -2872,13 +2880,13 @@ async function bind(){
  const gallery=document.getElementById('galleryInput');
  if(gallery&&!gallery.dataset.rc71StorageBound){gallery.dataset.rc71StorageBound='1';gallery.addEventListener('rc71imported',()=>{})}
 }
-window.RC72ImportStorage={openDB,importLibraryFile,importDocument,importMedia};
+window.RC71ImportStorage={openDB,importLibraryFile,importDocument,importMedia};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 new MutationObserver(bind).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
 <script id="rc71-document-import-ui">
-(()=>{function b(){const x=document.getElementById('importDocumentBtn'),i=document.getElementById('importDocumentFile');if(x&&i&&!x.dataset.b){x.dataset.b=1;x.onclick=()=>i.click()}if(i&&!i.dataset.b){i.dataset.b=1;i.onchange=async()=>{const f=i.files?.[0];if(f)try{await window.RC72ImportStorage.importDocument(f)}catch(e){console.error(e);alert('Impor dokumen gagal: '+e.message)}i.value=''}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',b,{once:true});else b();new MutationObserver(b).observe(document.documentElement,{childList:true,subtree:true})})();</script>
+(()=>{function b(){const x=document.getElementById('importDocumentBtn'),i=document.getElementById('importDocumentFile');if(x&&i&&!x.dataset.b){x.dataset.b=1;x.onclick=()=>i.click()}if(i&&!i.dataset.b){i.dataset.b=1;i.onchange=async()=>{const f=i.files?.[0];if(f)try{await window.RC71ImportStorage.importDocument(f)}catch(e){console.error(e);alert('Impor dokumen gagal: '+e.message)}i.value=''}}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',b,{once:true});else b();new MutationObserver(b).observe(document.documentElement,{childList:true,subtree:true})})();</script>
 
 
 
@@ -2897,7 +2905,7 @@ new MutationObserver(bind).observe(document.documentElement,{childList:true,subt
 #rc71TpSpeedLabel{min-width:55px;text-align:center;font-weight:700}#rc71TpStatus{margin-left:auto;font-size:12px;color:#9ed8c5;white-space:nowrap;max-width:45vw;overflow:hidden;text-overflow:ellipsis}
 @media (orientation:landscape){#rc71TpText{font-size:34px;left:10%;right:10%;line-height:1.6}.rc71-tp-top,.rc71-pdf-top{height:50px;min-height:50px}}
 
-/* RC72 V6.1.4 PDF READER FIX — PDF owns the screen while open.
+/* RC71 V6.1.4 PDF READER FIX — PDF owns the screen while open.
    The main app's vertical fullscreen rail must never cover the PDF controls. */
 body.rc71-pdf-reader-open>.app>footer.bottom{display:none!important}
 body.rc71-pdf-reader-open #rc71PdfOverlay,
@@ -2992,7 +3000,7 @@ function render(){
   list.appendChild(c);
  });
 }
-async function openImportDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC72_IMPORT_STORAGE',2);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function openImportDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC71_IMPORT_STORAGE',2);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function getDocuments(){const d=await openImportDB();return new Promise((ok,no)=>{const q=d.transaction('documents','readonly').objectStore('documents').getAll();q.onsuccess=()=>ok(q.result||[]);q.onerror=()=>no(q.error)})}
 async function deleteDocument(id){const d=await openImportDB();return new Promise((ok,no)=>{const q=d.transaction('documents','readwrite').objectStore('documents').delete(id);q.onsuccess=()=>ok();q.onerror=()=>no(q.error)})}
 function blobOfDoc(d){return d.blob instanceof Blob?d.blob:new Blob([d.blob],{type:d.type||'application/pdf'})}
@@ -3002,27 +3010,19 @@ function updateTpSpeed(){tpSpeedLabel.textContent=tpSpeed.toFixed(1)+'×';localS
 function updateTpFont(){tpText.style.fontSize=tpFont+'px';localStorage.setItem('rc71-pdf-tp-font',String(tpFont))}
 function tpTick(){if(!tpRunning)return;tpOffset-=0.35*tpSpeed;tpText.style.transform=`translateY(${tpOffset}px)`;tpRaf=requestAnimationFrame(tpTick)}
 function startTp(){if(!pdfText.trim())return;tpRunning=true;tpPause.textContent='Ⅱ Jeda';if(tpOffset===0)tpOffset=Math.min(0,innerHeight*.28);tpTick()}
-async function openPdfReader(d){
+function openPdfReader(d){
  stopTp();
  pdfCurrent=d;
- document.body.classList.add('rc72-pdf-reader-open');
- // RC72 iPad-first: use the PDF.js canvas reader as the primary viewer.
- // This avoids the slow/native iframe path for large PDFs.
- try{
-   if(typeof window.__rc72OpenVisualPdf==='function'){
-     await window.__rc72OpenVisualPdf(d);
-     return;
-   }
- }catch(e){ console.warn('RC72 visual PDF failed; using native fallback',e); }
  if(pdfURL)URL.revokeObjectURL(pdfURL);
  pdfURL=URL.createObjectURL(blobOfDoc(d));
  pdfTitle.textContent=d.name||'PDF Reader';
  pdfFrame.src=pdfURL;
+ document.body.classList.add('rc71-pdf-reader-open');
  pdfOverlay.classList.add('open');
  pdfOverlay.setAttribute('aria-hidden','false');
 }
 async function closePdfReader(){
- // RC72 CLOSE FIX: the close command must finish the whole PDF viewing stack.
+ // RC71 CLOSE FIX: the close command must finish the whole PDF viewing stack.
  // This is important on iPad when Visual Teleprompter is layered over the PDF Reader.
  try{
    if(document.fullscreenElement && document.exitFullscreen){
@@ -3050,7 +3050,7 @@ async function closePdfReader(){
  tpOffset=0;
 }
 // Public close hook used by the Visual PDF Teleprompter.
-window.RC72PdfReaderClose=closePdfReader;
+window.RC71PdfReaderClose=closePdfReader;
 function clampZoom(){
  const nearest=zoomLevels.reduce((a,b)=>Math.abs(b-zoom)<Math.abs(a-zoom)?b:a,1);
  zoom=nearest;
@@ -3138,7 +3138,7 @@ function closePlayer(save=true){
  current=null;
 }
 
-/* RC72 V4 — native PiP lifecycle belongs to the media-player scope. */
+/* RC71 V4 — native PiP lifecycle belongs to the media-player scope. */
 let rc71PiPActive=false;
 function rc71SetMediaPiP(active){
   rc71PiPActive=!!active;
@@ -3271,7 +3271,7 @@ overlay.addEventListener('click',e=>{if(e.target===overlay)closePlayer()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&current){const p=activePlayer();if(p&&Number.isFinite(p.currentTime)){current.position=p.currentTime;put({...current}).catch(()=>{})}}});
 
 
-// RC72 MEDIA STORAGE V2 — IndexedDB is the source of truth; OPFS mirrors files when available.
+// RC71 MEDIA STORAGE V2 — IndexedDB is the source of truth; OPFS mirrors files when available.
 // Existing imported MP4/MP3 records are migrated into the app's MEDIA_STORAGE directory on load.
 async function getAllMediaRecords(){return all()}
 async function ensureMediaFolder(){
@@ -3346,7 +3346,7 @@ $('mediaExportAllBtn')?.addEventListener('click',exportAllMedia);
  console.info('MEDIA_STORAGE mirror',r);
 })();
 $('mediaImportPdfBtn')?.addEventListener('click',()=>$('mediaImportPdfInput')?.click());
-$('mediaImportPdfInput')?.addEventListener('change',async e=>{for(const f of e.target.files||[]){try{await window.RC72ImportStorage.importDocument(f)}catch(err){console.warn(err);toast2('Impor PDF gagal: '+err.message)}}e.target.value=''});
+$('mediaImportPdfInput')?.addEventListener('change',async e=>{for(const f of e.target.files||[]){try{await window.RC71ImportStorage.importDocument(f)}catch(err){console.warn(err);toast2('Impor PDF gagal: '+err.message)}}e.target.value=''});
 $('rc71PdfClose')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closePdfReader()});$('rc71PdfTpBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(pdfCurrent)openPdfTeleprompter(pdfCurrent)});$('rc71TpClose')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeTp()});tpPause?.addEventListener('click',()=>{if(tpRunning)stopTp();else startTp()});$('rc71TpSlow')?.addEventListener('click',()=>{tpSpeed=Math.max(.2,+(tpSpeed-.1).toFixed(1));updateTpSpeed()});$('rc71TpFast')?.addEventListener('click',()=>{tpSpeed=Math.min(3,+(tpSpeed+.1).toFixed(1));updateTpSpeed()});$('rc71TpFontDown')?.addEventListener('click',()=>{tpFont=Math.max(18,tpFont-2);updateTpFont()});$('rc71TpFontUp')?.addEventListener('click',()=>{tpFont=Math.min(64,tpFont+2);updateTpFont()});$('rc71TpRestart')?.addEventListener('click',()=>{stopTp();tpOffset=0;tpText.style.transform='translateY(28vh)'});$('rc71PdfFullBtn')?.addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();try{if(document.fullscreenElement===pdfOverlay)await document.exitFullscreen();else if(document.fullscreenElement)await document.exitFullscreen();else if(pdfOverlay.requestFullscreen)await pdfOverlay.requestFullscreen({navigationUI:'hide'});else if(pdfOverlay.webkitRequestFullscreen)pdfOverlay.webkitRequestFullscreen()}catch(err){console.warn('PDF fullscreen gagal',err)}});document.addEventListener('rc71-documents-updated',reloadPdfs);document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(tpOverlay.classList.contains('open'))closeTp();else if(pdfOverlay.classList.contains('open'))closePdfReader()}});
 (async()=>{await seedBuiltins();await reload();await reloadPdfs()})();
 })();
@@ -3355,7 +3355,7 @@ $('rc71PdfClose')?.addEventListener('click',e=>{e.preventDefault();e.stopPropaga
 
 
 <style id="rc71-v5-landscape-nav-finetune">
-/* RC72 V5 — landscape Auto Focus floating control */
+/* RC71 V5 — landscape Auto Focus floating control */
 @media (orientation:landscape){
   #af76Controller.show{
     position:fixed!important;
@@ -3477,7 +3477,7 @@ html:-webkit-full-screen .nav-fullscreen-btn{
 
 
 <style id="rc71-v6-landscape-af-rightnav">
-/* RC72 V6 — landscape fullscreen right navigation + 70% draggable Auto Fokus. */
+/* RC71 V6 — landscape fullscreen right navigation + 70% draggable Auto Fokus. */
 @media (orientation:landscape){
   /* Auto Fokus: 70%, top-center by default. */
   #af76Controller.show,
@@ -3572,7 +3572,7 @@ html:-webkit-full-screen .nav-fullscreen-btn{
     min-width:50px!important;
     font-size:16px!important;
   }
-  /* RC72 V6.1.2: keep the expanded rail controls consistent with normal mode. */
+  /* RC71 V6.1.2: keep the expanded rail controls consistent with normal mode. */
   body.app-fullscreen>.app>footer.bottom .action,
   html:fullscreen .app>footer.bottom .action,
   html:-webkit-full-screen .app>footer.bottom .action{
@@ -3675,7 +3675,7 @@ html:-webkit-full-screen .nav-fullscreen-btn{
 
 
 <script id="rc71-stability-guard">
-/* RC72 V6.1.2 STABLE BASELINE
+/* RC71 V6.1.2 STABLE BASELINE
    This guard is diagnostic only. It never changes application behavior. */
 (()=> {
   const required = [
@@ -3689,7 +3689,7 @@ html:-webkit-full-screen .nav-fullscreen-btn{
   ];
   const check = () => {
     const missing = required.filter(id => !document.getElementById(id));
-    if (missing.length) console.warn('[RC72 BASELINE] Missing protected IDs:', missing);
+    if (missing.length) console.warn('[RC71 BASELINE] Missing protected IDs:', missing);
   };
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', check, {once:true});
@@ -3772,7 +3772,7 @@ async function close(){
   // When Visual Teleprompter was launched from the PDF Reader, X must close
   // the underlying PDF Reader as well — not merely reveal it again.
   try{
-    if(typeof window.RC72PdfReaderClose==='function') await window.RC72PdfReaderClose();
+    if(typeof window.RC71PdfReaderClose==='function') await window.RC71PdfReaderClose();
   }catch(e){}
 }
 async function ensurePdfJs(){
@@ -3796,12 +3796,6 @@ async function ensurePdfJs(){
  return window.__rc71PdfJsPromise;
 }
 function toBlob(d){return d.blob instanceof Blob?d.blob:new Blob([d.blob],{type:d.type||d.mime||'application/pdf'})}
-window.__rc72OpenVisualPdf=async function(d){
-  ov.classList.add('open');
-  ov.setAttribute('aria-hidden','false');
-  document.body.classList.add('rc72-vtp-active');
-  await renderPdf(d);
-};
 async function renderPdf(d){
  try{window.__rc71VtpObserver?.disconnect()}catch(e){}
  stop();current=d;pages.innerHTML='<div class="rc71-vtp-loading">Memuat PDF asli…</div>';vp.scrollTop=0;
@@ -3859,37 +3853,21 @@ async function renderPdf(d){
    entries.forEach(entry=>{
     if(entry.isIntersecting){
      const idx=Number(entry.target.dataset.page)-1;
+     localStorage.setItem('rc72-last-pdf-page',String(idx+1));
      renderPage(idx+1,entry.target);
      if(pageEls[idx+1])renderPage(idx+2,pageEls[idx+1]);
      if(pageEls[idx-1])renderPage(idx,pageEls[idx-1]);
     }
    });
   },{root:vp,rootMargin:'1200px 0px 1200px 0px',threshold:0.01});
-  window.__rc72VtpObserver=observer;
-  vp.addEventListener('scroll',()=>{
-    const slots=[...pages.querySelectorAll('.rc71-vtp-page-slot')];
-    if(!slots.length)return;
-    const top=vp.getBoundingClientRect().top;
-    let best=1,dist=Infinity;
-    for(const el of slots){const d=Math.abs(el.getBoundingClientRect().top-top);if(d<dist){dist=d;best=Number(el.dataset.page)}}
-    localStorage.setItem('rc72-vtp-last-page',String(best));
-  },{passive:true});
+  window.__rc71VtpObserver=observer;
   pageEls.forEach(el=>observer.observe(el));
-  // RC72 priority: render the first 3 pages immediately.
+  // RC72: render first 3 pages immediately for fast iPad start.
   await renderPage(1,pageEls[0]);
   if(pageEls[1])await renderPage(2,pageEls[1]);
   if(pageEls[2])await renderPage(3,pageEls[2]);
-  // Restore the last page and pre-render current ±1 only.
-  const saved=Math.max(1,Math.min(pdf.numPages,Number(localStorage.getItem('rc72-vtp-last-page')||1)));
-  if(saved>3){
-    const idx=saved-1;
-    await renderPage(saved,pageEls[idx]);
-    if(pageEls[idx-1])await renderPage(saved-1,pageEls[idx-1]);
-    if(pageEls[idx+1])await renderPage(saved+1,pageEls[idx+1]);
-    requestAnimationFrame(()=>pageEls[idx]?.scrollIntoView({block:'start'}));
-  }
   applyZoom();
-  status.textContent='PDF asli • '+pdf.numPages+' halaman • zoom '+Math.round(zoom*100)+'% • iPad/iOS siap';
+  status.textContent='PDF asli • '+pdf.numPages+' halaman • zoom '+Math.round(zoom*100)+'% • Android/iPad siap';
  }catch(e){console.error(e);pages.innerHTML='<div class="rc71-vtp-error">Gagal menampilkan PDF asli.<br><small>'+String(e.message||e)+'</small></div>';status.textContent='Gagal memuat PDF'}
 }
 
@@ -3908,7 +3886,7 @@ function findPdfFromTarget(target){
  }
  return null;
 }
-async function getDocs(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC72_IMPORT_STORAGE',2);r.onsuccess=()=>{const db=r.result;const q=db.transaction('documents','readonly').objectStore('documents').getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
+async function getDocs(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC71_IMPORT_STORAGE',2);r.onsuccess=()=>{const db=r.result;const q=db.transaction('documents','readonly').objectStore('documents').getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
 async function openByName(name){const docs=await getDocs();const d=docs.find(x=>(x.name||'')===name);if(d)await open(d);else alert('File PDF tidak ditemukan di penyimpanan impor.')}
 // Capture before the old text-extraction Teleprompter handlers. This preserves the PDF page exactly, including its original colors.
 document.addEventListener('click',async e=>{
@@ -3933,118 +3911,49 @@ $('rc71VtpClose').onclick=async e=>{e.preventDefault();e.stopPropagation();await
 $('rc71VtpFull').onclick=async()=>{try{if(!document.fullscreenElement)await ov.requestFullscreen?.();else await document.exitFullscreen?.()}catch{}};
 document.addEventListener('keydown',e=>{if(!ov.classList.contains('open'))return;if(e.key==='Escape'){close();return}if(e.code==='Space'){e.preventDefault();toggle()}if(e.key==='ArrowUp')vp.scrollBy({top:-vp.clientHeight*.8,behavior:'smooth'});if(e.key==='ArrowDown')vp.scrollBy({top:vp.clientHeight*.8,behavior:'smooth'})});
 clampSpeed();
-window.RC72VisualPDFTeleprompter={open,close,start,stop};
+window.RC71VisualPDFTeleprompter={open,close,start,stop};
 })();
 </script>
 
-
-<!-- RC72 REVISION: AUTO-OPEN PDF FROM EXISTING RC71/RC72 IMPORT STORAGE
-     The PDF is intentionally NOT copied into this repository. If the PDF was
-     previously imported by RC71/RC72 on the same GitHub Pages origin, it is
-     recovered from IndexedDB automatically. -->
-<script id="rc72-auto-open-existing-pdf">
+<script id="rc72-auto-pdf-bridge">
 (()=>{
 'use strict';
-/* RC72 Revision 2 — RC71 PDF bridge.
-   RC71 and RC72 normally share the same GitHub Pages origin, but their
-   IndexedDB database/store names may differ.  Discover the existing PDF
-   instead of assuming RC72_IMPORT_STORAGE is the only database. */
-const TARGET_DB='RC72_IMPORT_STORAGE', TARGET_STORE='documents';
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const pdfLike=(v,name='')=>{
+const DB='RC71_IMPORT_STORAGE',VER=2;
+function getDocs(){return new Promise((resolve,reject)=>{
+  const r=indexedDB.open(DB,VER);
+  r.onsuccess=()=>{const db=r.result;
+    if(!db.objectStoreNames.contains('documents')){resolve([]);return}
+    const q=db.transaction('documents','readonly').objectStore('documents').getAll();
+    q.onsuccess=()=>resolve(q.result||[]); q.onerror=()=>reject(q.error);
+  };
+  r.onerror=()=>reject(r.error);
+})}
+function isPdf(d){return /pdf/i.test(d?.type||'')||/\.pdf$/i.test(d?.name||'')}
+async function openStoredPdf(){
   try{
-    const type=(v?.type||v?.mime||'').toLowerCase();
-    const nm=(v?.name||name||'').toLowerCase();
-    return type.includes('pdf')||nm.endsWith('.pdf');
-  }catch{return false}
-};
-function findBlob(record){
-  const seen=new WeakSet();
-  function walk(v,key=''){
-    if(v==null)return null;
-    if(v instanceof Blob && (pdfLike(v,key)||v.type==='application/pdf')) return {blob:v,name:key||'Doa Ziarah.pdf',type:v.type||'application/pdf'};
-    if(typeof File!=='undefined' && v instanceof File)return {blob:v,name:v.name||key||'Doa Ziarah.pdf',type:v.type||'application/pdf'};
-    if(typeof v!=='object')return null;
-    if(seen.has(v))return null; seen.add(v);
-    if(v.blob instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.blob,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.blob.type||'application/pdf',created:v.created||v.lastModified||''};
-    if(v.file instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.file,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.file.type||'application/pdf',created:v.created||v.lastModified||''};
-    if(v.data instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.data,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.data.type||'application/pdf',created:v.created||v.lastModified||''};
-    for(const k of Object.keys(v)){
-      const x=v[k];
-      if(x instanceof Blob && (pdfLike(x,v.name||k)||k.toLowerCase().includes('pdf'))) return {blob:x,name:v.name||k||'Doa Ziarah.pdf',type:v.type||v.mime||x.type||'application/pdf',created:v.created||v.lastModified||''};
-      if(x && typeof x==='object' && !(x instanceof ArrayBuffer)){const hit=walk(x,k);if(hit)return hit;}
+    const docs=(await getDocs()).filter(isPdf);
+    if(!docs.length)return;
+    // Prefer the most recently imported PDF; this is the same PDF already used by RC71.
+    docs.sort((a,b)=>(Number(b.createdAt)||0)-(Number(a.createdAt)||0));
+    const d=docs[0];
+    // RC71's visual PDF engine is retained intact and receives the original Blob.
+    if(window.RC71VisualPDFTeleprompter?.open){
+      await window.RC71VisualPDFTeleprompter.open({
+        name:d.name||'Doa Ziarah.pdf',
+        type:d.type||'application/pdf',
+        blob:d.blob instanceof Blob?d.blob:new Blob([d.blob],{type:d.type||'application/pdf'})
+      });
+      const last=Math.max(1,Number(localStorage.getItem('rc72-last-pdf-page')||1));
+      // Scroll to saved position after initial rendering without forcing all pages to render.
+      if(last>1){setTimeout(()=>{
+        const el=document.querySelector(`#rc71VtpPages [data-page="${last}"]`);
+        if(el)el.scrollIntoView({block:'start',behavior:'auto'});
+      },900)}
     }
-    return null;
-  }
-  return walk(record);
+  }catch(e){console.warn('RC72 auto PDF:',e)}
 }
-async function listDbNames(){
-  const names=new Set([TARGET_DB,'RC71_IMPORT_STORAGE','RC71_PDF_STORAGE','amp-media-db','amp-gallery-db']);
-  try{if(indexedDB.databases){for(const d of await indexedDB.databases())if(d?.name)names.add(d.name)}}catch(e){console.warn('[RC72] indexedDB.databases unavailable',e)}
-  return [...names];
-}
-function openDb(name){return new Promise((resolve,reject)=>{const r=indexedDB.open(name);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onupgradeneeded=()=>{try{r.transaction.abort()}catch{}}})}
-async function scanDb(name){
-  let db;try{db=await openDb(name)}catch{return []}
-  const stores=[...db.objectStoreNames]; const out=[];
-  for(const storeName of stores){
-    try{
-      const values=await new Promise((res,rej)=>{const q=db.transaction(storeName,'readonly').objectStore(storeName).getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)});
-      for(const rec of values){const hit=findBlob(rec);if(hit)out.push({...hit,db:name,store:storeName});}
-    }catch(e){console.warn('[RC72] scan store failed',name,storeName,e)}
-  }
-  try{db.close()}catch{}
-  return out;
-}
-function score(x){
-  const n=(x.name||'').toLowerCase(); let s=0;
-  if(n.includes('ziarah'))s+=1000;if(n.includes('doa'))s+=500;if(n.includes('tahlil'))s+=250;if(n.includes('yasin'))s+=150;if(n.endsWith('.pdf'))s+=20;
-  s+=Math.min(100,Math.round((x.blob?.size||0)/100000));
-  const t=Date.parse(x.created||'');if(Number.isFinite(t))s+=Math.max(0,Math.round((t-1700000000000)/1e10));
-  return s;
-}
-async function saveToRc72(x){
-  try{
-    const db=await new Promise((resolve,reject)=>{const r=indexedDB.open(TARGET_DB,2);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains(TARGET_STORE))d.createObjectStore(TARGET_STORE,{keyPath:'id'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
-    await new Promise((resolve,reject)=>{const q=db.transaction(TARGET_STORE,'readwrite').objectStore(TARGET_STORE).put({id:'rc72-bridge-'+Date.now(),name:x.name||'Doa Ziarah.pdf',type:x.type||'application/pdf',mime:x.type||'application/pdf',blob:x.blob,size:x.blob.size,created:new Date().toISOString(),position:0});q.onsuccess=resolve;q.onerror=()=>reject(q.error)});
-    db.close();
-  }catch(e){console.warn('[RC72] Could not cache bridged PDF',e)}
-}
-async function fetchPdfLinksFromRc71(){
-  const candidates=['../RC71/index.html','/RC71/index.html','https://branigak-mawgak.github.io/RC71/index.html'];
-  for(const u of candidates){
-    try{
-      const r=await fetch(u,{cache:'no-store'});if(!r.ok)continue;const html=await r.text();
-      const urls=[...html.matchAll(/(?:src|href|url|pdf(?:Url|Src)?)[^"'<>]{0,80}["'=:\s]+([^"'<>\s]+\.pdf(?:\?[^"'<>\s]*)?)/ig)].map(m=>m[1]);
-      for(const raw of urls){
-        const url=new URL(raw,u).href;const rr=await fetch(url,{cache:'no-store'});if(!rr.ok)continue;const b=await rr.blob();if(b.type.includes('pdf')||url.toLowerCase().includes('.pdf'))return {blob:b,name:decodeURIComponent(url.split('/').pop().split('?')[0])||'Doa Ziarah.pdf',type:b.type||'application/pdf'};
-      }
-    }catch(e){console.warn('[RC72] RC71 URL bridge failed',u,e)}
-  }
-  return null;
-}
-async function boot(){
-  for(let i=0;i<30;i++){if(typeof window.RC72VisualPDFTeleprompter?.open==='function')break;await sleep(200)}
-  if(window.__RC72_AUTO_PDF_OPENED)return;
-  try{
-    let candidates=[];
-    for(const name of await listDbNames())candidates.push(...await scanDb(name));
-    let chosen=candidates.sort((a,b)=>score(b)-score(a))[0]||null;
-    if(!chosen)chosen=await fetchPdfLinksFromRc71();
-    if(!chosen){
-      console.warn('[RC72] Tidak menemukan PDF dari RC71/IndexedDB.');
-      const st=document.getElementById('rc71VtpStatus');if(st)st.textContent='PDF belum ditemukan dari RC71';
-      return;
-    }
-    window.__RC72_AUTO_PDF_OPENED=true;
-    await saveToRc72(chosen);
-    await sleep(250);
-    await window.RC72VisualPDFTeleprompter.open(chosen);
-  }catch(e){console.error('[RC72] Auto-open RC71 PDF failed:',e)}
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,700),{once:true});else setTimeout(boot,700);
+window.addEventListener('load',()=>setTimeout(openStoredPdf,900));
 })();
 </script>
-
 </body>
 </html>
