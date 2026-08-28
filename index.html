@@ -1043,8 +1043,19 @@ body.rc71-native-pip-active{
 .smart-counter-controls .counter-reset{color:var(--accent)}
 #counterUndo,#counterContinue{display:none!important}
 footer.bottom .nav-fullscreen-btn,footer.bottom #themeNavBtn,footer.bottom #smartCounterNavBtn{display:none!important}
+</style><style>
+/* RC72 Fine Tune — Doa Tahlil */
+#doa-tahlil .doa-tahlil-para{margin:.15em 0 .48em!important;line-height:1.48!important;padding:0!important;position:static!important}
+#doa-tahlil .doa-tahlil-para.c1{color:var(--c1)!important}
+#doa-tahlil .doa-tahlil-para.c2{color:var(--c2)!important}
+#doa-tahlil .doa-tahlil-para.c3{color:var(--c3)!important}
+#doa-tahlil .doa-tahlil-para.c4{color:var(--c4)!important}
+#doa-tahlil .doa-tahlil-para.c5{color:var(--c5)!important}
+#doa-tahlil .doa-tahlil-para.c6{color:var(--c6)!important}
+#doa-tahlil .doa-tahlil-para.c7{color:var(--c7)!important}
+@media(max-width:900px){#doa-tahlil .doa-tahlil-para{line-height:1.44!important;margin-bottom:.42em!important}}
 </style></head>
-<body data-amalan-build="RC72-V6.1.4-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER" data-revision="RC72-V6.1.4-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER">
+<body data-amalan-build="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER" data-revision="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
 <button aria-label="Tambah hitungan dzikir" class="counter-fab" id="counterFab" type="button"><span class="counter-value" id="counterValue">0 / 33</span><span class="counter-mini-progress"><i id="counterProgress"></i></span><span class="counter-label" id="counterLabel">Dzikir</span><span class="counter-hint">Ketuk +1</span></button>
@@ -1205,7 +1216,7 @@ footer.bottom .nav-fullscreen-btn,footer.bottom #themeNavBtn,footer.bottom #smar
 <textarea id="editPhrases" placeholder="Contoh: AllooHumMa | Sholli 'Alaa | SayyidiNaa MuHamMad" rows="4"></textarea>
 <div class="hint">Ubah posisi tanda <b>|</b> untuk menentukan perpindahan highlight. Warna frasa tetap diatur otomatis.</div>
 </div><h4>Pratinjau</h4><div class="para" id="editPreview"></div><div class="modal-actions"><button class="action primary" id="saveEditBtn">Simpan</button><button class="action" id="restoreOriginalBtn">Kembalikan Asli</button><button class="action" id="closeEditorBtn">Tutup</button></div><h4>Riwayat perubahan</h4><div class="version-list" id="versionList"></div></div></div><div class="modal" id="tocManagerModal"><div class="modal-card"><h3 style="margin-top:0">☰ Atur Daftar Isi</h3><p class="hint">Tekan dan geser untuk mengurutkan. Gunakan panah jika drag tidak nyaman di HP. Nama dan visibilitas tersimpan otomatis.</p><div class="toc-manager-list" id="tocManagerList"></div><div class="modal-actions"><button class="action primary" id="saveTocBtn">Simpan</button><button class="action" id="resetTocBtn">Pulihkan Urutan Awal</button><button class="action" id="closeTocManagerBtn">Tutup</button></div></div></div><div class="modal" id="deceasedModal"><div class="modal-card"><h3 style="margin-top:0">👤 Ahli Kubur</h3><p class="hint">Pilih nama yang didoakan.</p><div class="deceased-list" id="deceasedList"></div><div class="deceased-form"><input id="deceasedName" placeholder="Nama lengkap"><input id="deceasedRelation" placeholder="Hubungan/keterangan, mis. Ayah"><input id="deceasedDeathDate" type="date"/><button class="action primary" id="addDeceasedBtn">＋ Tambah Nama</button></input></input></div><div class="modal-actions deceased-actions"><button class="action" id="editOrderDeceasedBtn">↕ Edit Urutan</button><button class="action" id="clearDeceasedBtn">🗑 Hapus</button><button class="action primary" id="saveDeceasedBtn">Simpan</button><button class="action" id="closeDeceasedBtn">Tutup</button></div></div></div>
-<div aria-hidden="true" class="slideshow-overlay" id="slideshowOverlay"><div class="slide-top"><span id="slideCounter"></span><button id="slideFullscreenBtn">⛶ Full Screen</button><button id="slideCloseBtn">✕</button></div><button class="slide-nav prev" id="slidePrevBtn">‹</button><img alt="Slide show" id="slideImage"/><button class="slide-nav next" id="slideNextBtn">›</button><div class="slide-bottom"><div id="slideCaption"></div><button id="slidePlayPauseBtn">⏸ Jeda</button></div></div>
+<div aria-hidden="true" class="slideshow-overlay" id="slideshowOverlay"><div class="slide-top"><span id="slideCounter"></span><button id="slideFullscreenBtn">⛶ Full Screen</button><button id="slideCloseBtn">✕</button></div><button class="slide-nav prev" id="slidePrevBtn">《</button><img alt="Slide show" id="slideImage"/><button class="slide-nav next" id="slideNextBtn">》</button><div class="slide-bottom"><div id="slideCaption"></div><button id="slidePlayPauseBtn">⏸ Jeda</button></div></div>
 <div class="toast" id="toast"></div><script>
 function markOpenings(){document.querySelectorAll('.para').forEach(p=>{if(p.querySelector('.opening'))return;const nodes=[...p.childNodes];for(const n of nodes){if(n.nodeType!==3||!n.textContent.trim())continue;const t=n.textContent;const m=t.match(/^([\s\S]*?(?:[.;!?]|$))/);if(!m||!m[1])continue;const s=document.createElement('span');s.className='opening';s.textContent=m[1];n.textContent=t.slice(m[1].length);p.insertBefore(s,n);break}})}markOpenings();
 function applyColorCycle(){const byChapter={};document.querySelectorAll('.para').forEach(p=>{const ch=p.dataset.chapter||'umum';byChapter[ch]=(byChapter[ch]||0)+1;p.classList.remove('c1','c2','c3','c4','c5');p.classList.add('c'+(((byChapter[ch]-1)%5)+1));});}applyColorCycle();
@@ -1596,23 +1607,33 @@ window.SmartDzikirCounter={
 (()=>{
 const KEY='amp-b72-';
 const DEFAULT=[
-{id:'panduan-ziarah',title:'Panduan Ziarah Kubur',icon:'🕌',visible:true},
+{id:'panduan-ziarah',title:'Panduan Ziarah',icon:'🕌',visible:true},
 {id:'tawasulan',title:'TAWASULAN',icon:'📿',visible:true},
-{id:'surat-yasin-ziarah',title:'Surat Yasin',icon:'📖',visible:true},
+{id:'surat-yasin-ziarah',title:'Yasin',icon:'📖',visible:true},
 {id:'tahlil-ziarah',title:'Tahlil',icon:'📿',visible:true},
-{id:'surat-waqiah',title:'Surat Al-Waqi’ah',icon:'🌾',visible:true},
-{id:'surat-mulk',title:'Surat Al-Mulk',icon:'🌙',visible:true},
+{id:'doa-tahlil',title:'Doa Tahlil',icon:'🤲',visible:true},
+{id:'surat-waqiah',title:'Surat Al-Waqiah',icon:'🌾',visible:true},
+{id:'surat-mulk',title:'Surat Al Mulk',icon:'🌙',visible:true},
 {id:'doa-1',title:'Doa Umum',icon:'🤲',visible:true},
 {id:'doa-2',title:'Doa Hajat',icon:'⭐',visible:true},
-{id:'yasin-waqiah-tabarok',title:'Yasin Waqiah Tabarok',icon:'📚',visible:true},
 {id:'library-bacaan',title:'Library Bacaan',icon:'📚',visible:true},
-{id:'galeri-foto',title:'Media Galeri',icon:'🎞️',visible:true},
+{id:'galeri-foto',title:'Galeri Foto',icon:'🎞️',visible:true},
 {id:'catatan',title:'Catatan',icon:'📝',visible:true}
 ];
 const read=(k,d)=>{try{return JSON.parse(SAFE_STORE.getItem(KEY+k)||'null')??d}catch{return d}},write=(k,v)=>SAFE_STORE.setItem(KEY+k,JSON.stringify(v));
 const esc=s=>(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const migration='menu-order-v4-dom-sync';
+const migration='menu-order-v5-doa-tahlil-order';
+const EXACT_MENU_ORDER=[
+'panduan-ziarah','tawasulan','surat-yasin-ziarah','tahlil-ziarah','doa-tahlil',
+'surat-waqiah','surat-mulk','doa-1','doa-2','library-bacaan','galeri-foto','catatan'
+];
 let menu=read('menu',null);
+if(SAFE_STORE.getItem(migration)!=='1'){
+  const byId=new Map(DEFAULT.map(x=>[x.id,x]));
+  menu=EXACT_MENU_ORDER.map(id=>({...byId.get(id)}));
+  write('menu',menu);
+  SAFE_STORE.setItem(migration,'1');
+}
 function normalizeMenu(){
   const stored=Array.isArray(menu)?menu.filter(x=>x?.id):[];
   const defaults=new Map(DEFAULT.map(x=>[x.id,x]));
