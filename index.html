@@ -1043,8 +1043,19 @@ body.rc71-native-pip-active{
 .smart-counter-controls .counter-reset{color:var(--accent)}
 #counterUndo,#counterContinue{display:none!important}
 footer.bottom .nav-fullscreen-btn,footer.bottom #themeNavBtn,footer.bottom #smartCounterNavBtn{display:none!important}
+</style><style>
+/* RC72 Fine Tune — Doa Tahlil */
+#doa-tahlil .doa-tahlil-para{margin:.15em 0 .48em!important;line-height:1.48!important;padding:0!important;position:static!important}
+#doa-tahlil .doa-tahlil-para.c1{color:var(--c1)!important}
+#doa-tahlil .doa-tahlil-para.c2{color:var(--c2)!important}
+#doa-tahlil .doa-tahlil-para.c3{color:var(--c3)!important}
+#doa-tahlil .doa-tahlil-para.c4{color:var(--c4)!important}
+#doa-tahlil .doa-tahlil-para.c5{color:var(--c5)!important}
+#doa-tahlil .doa-tahlil-para.c6{color:var(--c6)!important}
+#doa-tahlil .doa-tahlil-para.c7{color:var(--c7)!important}
+@media(max-width:900px){#doa-tahlil .doa-tahlil-para{line-height:1.44!important;margin-bottom:.42em!important}}
 </style></head>
-<body data-amalan-build="RC72-V6.1.4-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER" data-revision="RC72-V6.1.4-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER">
+<body data-amalan-build="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER" data-revision="RC72-V6.1.5-FINETUNE-DOA-TAHLIL-NAV-SMARTCOUNTER">
 <button aria-label="Smart Counter manual" id="manualSmartCounterBtn" title="Smart Counter Manual" type="button">🔢</button><button aria-label="Kurangi satu hitungan" class="counter-undo" id="counterUndo" type="button">↶ Kurangi</button>
 <button aria-label="Lanjutkan Auto Fokus dan tutup Smart Counter" class="counter-continue" id="counterContinue" type="button">▶ Lanjut Auto Fokus</button>
 <button aria-label="Tambah hitungan dzikir" class="counter-fab" id="counterFab" type="button"><span class="counter-value" id="counterValue">0 / 33</span><span class="counter-mini-progress"><i id="counterProgress"></i></span><span class="counter-label" id="counterLabel">Dzikir</span><span class="counter-hint">Ketuk +1</span></button>
@@ -1205,7 +1216,7 @@ footer.bottom .nav-fullscreen-btn,footer.bottom #themeNavBtn,footer.bottom #smar
 <textarea id="editPhrases" placeholder="Contoh: AllooHumMa | Sholli 'Alaa | SayyidiNaa MuHamMad" rows="4"></textarea>
 <div class="hint">Ubah posisi tanda <b>|</b> untuk menentukan perpindahan highlight. Warna frasa tetap diatur otomatis.</div>
 </div><h4>Pratinjau</h4><div class="para" id="editPreview"></div><div class="modal-actions"><button class="action primary" id="saveEditBtn">Simpan</button><button class="action" id="restoreOriginalBtn">Kembalikan Asli</button><button class="action" id="closeEditorBtn">Tutup</button></div><h4>Riwayat perubahan</h4><div class="version-list" id="versionList"></div></div></div><div class="modal" id="tocManagerModal"><div class="modal-card"><h3 style="margin-top:0">☰ Atur Daftar Isi</h3><p class="hint">Tekan dan geser untuk mengurutkan. Gunakan panah jika drag tidak nyaman di HP. Nama dan visibilitas tersimpan otomatis.</p><div class="toc-manager-list" id="tocManagerList"></div><div class="modal-actions"><button class="action primary" id="saveTocBtn">Simpan</button><button class="action" id="resetTocBtn">Pulihkan Urutan Awal</button><button class="action" id="closeTocManagerBtn">Tutup</button></div></div></div><div class="modal" id="deceasedModal"><div class="modal-card"><h3 style="margin-top:0">👤 Ahli Kubur</h3><p class="hint">Pilih nama yang didoakan.</p><div class="deceased-list" id="deceasedList"></div><div class="deceased-form"><input id="deceasedName" placeholder="Nama lengkap"><input id="deceasedRelation" placeholder="Hubungan/keterangan, mis. Ayah"><input id="deceasedDeathDate" type="date"/><button class="action primary" id="addDeceasedBtn">＋ Tambah Nama</button></input></input></div><div class="modal-actions deceased-actions"><button class="action" id="editOrderDeceasedBtn">↕ Edit Urutan</button><button class="action" id="clearDeceasedBtn">🗑 Hapus</button><button class="action primary" id="saveDeceasedBtn">Simpan</button><button class="action" id="closeDeceasedBtn">Tutup</button></div></div></div>
-<div aria-hidden="true" class="slideshow-overlay" id="slideshowOverlay"><div class="slide-top"><span id="slideCounter"></span><button id="slideFullscreenBtn">⛶ Full Screen</button><button id="slideCloseBtn">✕</button></div><button class="slide-nav prev" id="slidePrevBtn">‹</button><img alt="Slide show" id="slideImage"/><button class="slide-nav next" id="slideNextBtn">›</button><div class="slide-bottom"><div id="slideCaption"></div><button id="slidePlayPauseBtn">⏸ Jeda</button></div></div>
+<div aria-hidden="true" class="slideshow-overlay" id="slideshowOverlay"><div class="slide-top"><span id="slideCounter"></span><button id="slideFullscreenBtn">⛶ Full Screen</button><button id="slideCloseBtn">✕</button></div><button class="slide-nav prev" id="slidePrevBtn">《</button><img alt="Slide show" id="slideImage"/><button class="slide-nav next" id="slideNextBtn">》</button><div class="slide-bottom"><div id="slideCaption"></div><button id="slidePlayPauseBtn">⏸ Jeda</button></div></div>
 <div class="toast" id="toast"></div><script>
 function markOpenings(){document.querySelectorAll('.para').forEach(p=>{if(p.querySelector('.opening'))return;const nodes=[...p.childNodes];for(const n of nodes){if(n.nodeType!==3||!n.textContent.trim())continue;const t=n.textContent;const m=t.match(/^([\s\S]*?(?:[.;!?]|$))/);if(!m||!m[1])continue;const s=document.createElement('span');s.className='opening';s.textContent=m[1];n.textContent=t.slice(m[1].length);p.insertBefore(s,n);break}})}markOpenings();
 function applyColorCycle(){const byChapter={};document.querySelectorAll('.para').forEach(p=>{const ch=p.dataset.chapter||'umum';byChapter[ch]=(byChapter[ch]||0)+1;p.classList.remove('c1','c2','c3','c4','c5');p.classList.add('c'+(((byChapter[ch]-1)%5)+1));});}applyColorCycle();
@@ -1596,43 +1607,32 @@ window.SmartDzikirCounter={
 (()=>{
 const KEY='amp-b72-';
 const DEFAULT=[
-{id:'panduan-ziarah',title:'Panduan Ziarah Kubur',icon:'🕌',visible:true},
+{id:'panduan-ziarah',title:'Panduan Ziarah',icon:'🕌',visible:true},
 {id:'tawasulan',title:'TAWASULAN',icon:'📿',visible:true},
-{id:'surat-yasin-ziarah',title:'Surat Yasin',icon:'📖',visible:true},
+{id:'surat-yasin-ziarah',title:'Yasin',icon:'📖',visible:true},
 {id:'tahlil-ziarah',title:'Tahlil',icon:'📿',visible:true},
-{id:'surat-waqiah',title:'Surat Al-Waqi’ah',icon:'🌾',visible:true},
-{id:'surat-mulk',title:'Surat Al-Mulk',icon:'🌙',visible:true},
+{id:'doa-tahlil',title:'Doa Tahlil',icon:'🤲',visible:true},
+{id:'surat-waqiah',title:'Surat Al-Waqiah',icon:'🌾',visible:true},
+{id:'surat-mulk',title:'Surat Al Mulk',icon:'🌙',visible:true},
 {id:'doa-1',title:'Doa Umum',icon:'🤲',visible:true},
 {id:'doa-2',title:'Doa Hajat',icon:'⭐',visible:true},
-{id:'yasin-waqiah-tabarok',title:'Yasin Waqiah Tabarok',icon:'📚',visible:true},
 {id:'library-bacaan',title:'Library Bacaan',icon:'📚',visible:true},
-{id:'galeri-foto',title:'Media Galeri',icon:'🎞️',visible:true},
+{id:'galeri-foto',title:'Galeri Foto',icon:'🎞️',visible:true},
 {id:'catatan',title:'Catatan',icon:'📝',visible:true}
 ];
 const read=(k,d)=>{try{return JSON.parse(SAFE_STORE.getItem(KEY+k)||'null')??d}catch{return d}},write=(k,v)=>SAFE_STORE.setItem(KEY+k,JSON.stringify(v));
 const esc=s=>(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const migration='menu-order-v4-dom-sync';
-let menu=read('menu',null);
+const migration='menu-order-v6-exact-order';
+const EXACT_MENU_ORDER=[
+'panduan-ziarah','tawasulan','surat-yasin-ziarah','tahlil-ziarah','doa-tahlil',
+'surat-waqiah','surat-mulk','doa-1','doa-2','library-bacaan','galeri-foto','catatan'
+];
+let menu=DEFAULT.map(x=>({...x}));
 function normalizeMenu(){
-  const stored=Array.isArray(menu)?menu.filter(x=>x?.id):[];
-  const defaults=new Map(DEFAULT.map(x=>[x.id,x]));
-  const valid=new Set(DEFAULT.map(x=>x.id));
-  const seen=new Set();
-  const ordered=[];
-  // Preserve the user's saved order; append any newly introduced menu items.
-  for(const x of stored){
-    if(valid.has(x.id)&&!seen.has(x.id)){ordered.push({...defaults.get(x.id),...x});seen.add(x.id);}
-  }
-  for(const d of DEFAULT){if(!seen.has(d.id)){ordered.push({...d});seen.add(d.id);}}
-  menu=ordered;
+  const byId=new Map(DEFAULT.map(x=>[x.id,x]));
+  // RC72 uses one canonical order. Do not restore an older saved order.
+  menu=EXACT_MENU_ORDER.map(id=>({...byId.get(id)}));
 }
-// One-time migration: establish the requested RC72 V2 order while retaining labels/icons/visibility.
-if(!read(migration,false)){
-  const stored=Array.isArray(menu)?menu:[];
-  const byId=new Map(stored.filter(x=>x?.id).map(x=>[x.id,x]));
-  menu=DEFAULT.map(d=>({...d,...(byId.get(d.id)||{})}));
-  write('menu',menu);write(migration,true);
-}else normalizeMenu();
 function applyMenu(){
   normalizeMenu();
   const grid=document.querySelector('.home-grid');
@@ -1640,52 +1640,58 @@ function applyMenu(){
   const beranda=document.getElementById('beranda');
   const panel=document.querySelector('#drawer .panel');
   const settingsTitle=[...document.querySelectorAll('#drawer .panel h3')].find(h=>h.textContent.trim()==='Pengaturan');
-  // Keep the current paragraph element while the DOM is reordered so the
-  // numeric Auto Focus index cannot silently point to a different reading.
-  const currentActiveEl=Array.isArray(paras)?paras[active]:null;
-  let sectionAnchor=beranda;
+
+  // HOME SHORTCUTS — always canonical order.
   menu.forEach(item=>{
-    const card=document.querySelector(`.home-card[data-menu-id="${item.id}"]`),grp=document.querySelector(`.toc-group[data-menu-id="${item.id}"]`),sec=document.getElementById(item.id);
-    if(card){const b=card.querySelector('b'),em=card.querySelector('.emoji');if(b)b.textContent=item.title;if(em)em.textContent=item.icon;card.hidden=!item.visible;grid?.appendChild(card)}
-    // TOC groups must be inserted BEFORE Pengaturan. Using appendChild here
-    // used to move every group below Pengaturan after each applyMenu().
-    if(grp){const span=grp.querySelector('.toc-head span');if(span)span.textContent=item.icon+' '+item.title;grp.hidden=!item.visible;if(settingsTitle)settingsTitle.before(grp);else panel?.appendChild(grp)}
-    if(sec&&sec.querySelector('h2')){sec.querySelector('h2').textContent=item.title;if(book&&sectionAnchor){sectionAnchor.after(sec);sectionAnchor=sec;}}
+    const card=document.querySelector(`.home-card[data-menu-id="${item.id}"]`);
+    if(card){
+      const b=card.querySelector('b'),em=card.querySelector('.emoji');
+      if(b)b.textContent=item.title;
+      if(em)em.textContent=item.icon;
+      card.hidden=item.visible===false;
+      grid?.appendChild(card);
+    }
   });
 
-  // Auto Focus must follow the same section order as the visible TOC.
-  // The original paras array was captured before applyMenu() moved sections,
-  // which caused the old sequence TAWASULAN -> Ziarah -> Yasin to persist.
-  if(Array.isArray(paras)){
-    paras.sort((a,b)=>{
-      const sa=a.closest('section.chapter'), sb=b.closest('section.chapter');
-      if(sa===sb)return 0;
-      if(!sa)return 1;
-      if(!sb)return -1;
-      const pos=sa.compareDocumentPosition(sb);
-      return (pos & Node.DOCUMENT_POSITION_FOLLOWING)?-1:1;
-    });
-
-    // First launch after this fix starts Auto Focus from the first visible
-    // reading in the TOC (Panduan Ziarah Kubur), while later launches retain
-    // the user's actual paragraph position.
-    const afOrderMigration='autofocus-order-v2';
-    if(!read(afOrderMigration,false)){
-      const first=menu.find(m=>m.visible!==false&&document.getElementById(m.id)?.querySelector('.para'));
-      const firstIndex=first?paras.findIndex(p=>p.closest('section.chapter')?.id===first.id):-1;
-      if(firstIndex>=0){
-        active=firstIndex;
-        paras.forEach((p,n)=>p.classList.toggle('active',n===active));
-        SAFE_STORE.setItem('tqv3b3-active',String(active));
-      }else if(currentActiveEl){
-        active=paras.indexOf(currentActiveEl);
-      }
-      write(afOrderMigration,true);
-    }else if(currentActiveEl){
-      const idx=paras.indexOf(currentActiveEl);
-      if(idx>=0)active=idx;
+  // TABLE OF CONTENTS — always canonical order, Pengaturan stays last.
+  menu.forEach(item=>{
+    const grp=document.querySelector(`.toc-group[data-menu-id="${item.id}"]`);
+    if(grp){
+      const span=grp.querySelector('.toc-head span');
+      if(span)span.textContent=item.icon+' '+item.title;
+      grp.hidden=item.visible===false;
+      if(settingsTitle)settingsTitle.before(grp);else panel?.appendChild(grp);
     }
+  });
+
+  // BOOK SECTIONS — same canonical order.
+  let sectionAnchor=beranda;
+  menu.forEach(item=>{
+    const sec=document.getElementById(item.id);
+    if(sec){
+      const h=sec.querySelector('h2');
+      if(h)h.textContent=item.title;
+      if(book&&sectionAnchor){sectionAnchor.after(sec);sectionAnchor=sec;}
+    }
+  });
+
+  // AUTO FOCUS — explicitly rebuild the paragraph sequence from the same
+  // canonical menu order. This is independent of old DOM/localStorage order.
+  if(Array.isArray(paras)){
+    const ordered=[];
+    for(const id of EXACT_MENU_ORDER){
+      const sec=document.getElementById(id);
+      if(sec)sec.querySelectorAll('.para').forEach(el=>ordered.push(el));
+    }
+    const known=new Set(ordered);
+    paras.forEach(el=>{if(!known.has(el))ordered.push(el)});
+    paras.splice(0,paras.length,...ordered);
+    if(active>=paras.length)active=Math.max(0,paras.length-1);
+    paras.forEach((el,n)=>el.classList.toggle('active',n===active));
+    try{SAFE_STORE.setItem('tqv3b3-active',String(active))}catch{}
   }
+  // Keep the visible Pengaturan item at the absolute end of the TOC.
+  if(settingsTitle)panel?.appendChild(settingsTitle);
 }
 applyMenu();
 const tm=document.getElementById('tocManagerModal'),list=document.getElementById('tocManagerList');
@@ -4081,3 +4087,20 @@ load();
 })();
 </script></body>
 </html>
+
+<style id="rc72-exact-order-fix">
+/* RC72 canonical navigation order */
+</style>
+<script id="rc72-exact-order-runtime">
+(()=>{
+ const order=['panduan-ziarah','tawasulan','surat-yasin-ziarah','tahlil-ziarah','doa-tahlil','surat-waqiah','surat-mulk','doa-1','doa-2','library-bacaan','galeri-foto','catatan'];
+ window.RC72_EXACT_MENU_ORDER=order.slice();
+ const fix=()=>{
+   const grid=document.querySelector('.home-grid'); if(grid) order.forEach(id=>{const e=grid.querySelector(`[data-menu-id="${id}"]`); if(e)grid.appendChild(e)});
+   const panel=document.querySelector('#drawer .panel'); if(panel){const st=[...panel.querySelectorAll('h3')].find(x=>x.textContent.trim()==='Pengaturan'); order.forEach(id=>{const e=panel.querySelector(`.toc-group[data-menu-id="${id}"]`); if(e)st?st.before(e):panel.appendChild(e)}); if(st)panel.appendChild(st);}
+   const prev=document.getElementById('prevBtn'),next=document.getElementById('nextBtn'); if(prev)prev.textContent='《'; if(next)next.textContent='》';
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix,{once:true}); else fix();
+ setTimeout(fix,300);
+})();
+</script>
