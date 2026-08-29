@@ -1,0 +1,3 @@
+RC71 V7.0 — iPad 10.9 Edition
+Base: RC71 V6.1.9 NAV + Smart Counter Fine Tune
+Packaging: GitHub Pages-ready
