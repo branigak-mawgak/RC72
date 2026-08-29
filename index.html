@@ -3892,13 +3892,20 @@ async function renderPdf(d){
  title.textContent=(d.name||'PDF')+' • Teleprompter Asli';status.textContent='Memuat PDF…';
  try{
   const lib=await ensurePdfJs();
-  const bytes=await toBlob(d).arrayBuffer();
+  // IMPORTANT iPad/Safari FIX:
+  // PDF.js may transfer (detach) the ArrayBuffer passed to a worker. Never reuse
+  // the same ArrayBuffer for a fallback attempt, otherwise Safari throws:
+  // "Buffer is already detached". Create a brand-new Uint8Array every time.
+  const sourceBlob=toBlob(d);
+  const freshPdfData=async()=>new Uint8Array(await sourceBlob.slice(0,sourceBlob.size,sourceBlob.type||'application/pdf').arrayBuffer());
   let pdf;
   try{
-   pdf=await lib.getDocument({data:bytes,disableAutoFetch:false,disableStream:false,useWorkerFetch:true,isEvalSupported:true}).promise;
+   pdf=await lib.getDocument({data:await freshPdfData(),disableAutoFetch:false,disableStream:false,useWorkerFetch:true,isEvalSupported:true}).promise;
   }catch(workerErr){
    console.warn('PDF.js worker gagal, fallback main-thread:',workerErr);
-   pdf=await lib.getDocument({data:bytes,disableWorker:true,disableAutoFetch:false,disableStream:false}).promise;
+   // freshPdfData() is deliberately called again: the first worker attempt may
+   // already have detached its buffer.
+   pdf=await lib.getDocument({data:await freshPdfData(),disableWorker:true,disableAutoFetch:false,disableStream:false}).promise;
   }
   pages.innerHTML='';
   baseAvailableW=Math.max(280,Math.min(window.innerWidth*(innerWidth>innerHeight?.94:.96),1400));
