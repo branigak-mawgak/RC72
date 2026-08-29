@@ -4043,8 +4043,8 @@ window.RC72VisualPDFTeleprompter={open,close,start,stop};
 'use strict';
 const DB='RC72_IMPORT_STORAGE', VER=7, STORE='documents';
 const BUILTINS=[
- {id:'builtin-yasinan',name:'YASINAN.pdf',url:'library-pdf/YASINAN.pdf'},
- {id:'builtin-wiridan',name:'WIRIDAN(1).pdf',url:'library-pdf/WIRIDAN(1).pdf'}
+ {id:'builtin-yasinan',name:'YASINAN.pdf',url:'./library-pdf/YASINAN.pdf'},
+ {id:'builtin-wiridan',name:'WIRIDAN(1).pdf',url:'./library-pdf/WIRIDAN(1).pdf'}
 ];
 let currentUrl='';
 const $=id=>document.getElementById(id);
@@ -4057,7 +4057,15 @@ async function putFile(name,blob){blob=asBlob(blob,'application/pdf');if(!(await
 async function remove(id){return tx('readwrite',os=>os.delete(id));}
 function closePdf(){const ov=$('rc71PdfOverlay'),fr=$('rc71PdfFrame');if(fr)fr.src='about:blank';if(currentUrl){URL.revokeObjectURL(currentUrl);currentUrl='';}ov?.classList.remove('open');ov?.setAttribute('aria-hidden','true');}
 function showPdf(name,src,isObject){const ov=$('rc71PdfOverlay'),fr=$('rc71PdfFrame'),title=$('rc71PdfTitle');if(!ov||!fr)throw new Error('PDF Reader tidak tersedia');closePdf();if(title)title.textContent=name||'PDF Reader';if(isObject)currentUrl=src;fr.src=src;ov.classList.add('open');ov.setAttribute('aria-hidden','false');}
-async function openBuiltin(item){showPdf(item.name,item.url,false);}
+async function openBuiltin(item){
+ const url=new URL(item.url,location.href).href;
+ const r=await fetch(url,{cache:'no-store'});
+ if(!r.ok)throw new Error('PDF bawaan tidak ditemukan di server (HTTP '+r.status+'). Pastikan folder library-pdf ikut di-deploy bersama index.html.');
+ const blob=await r.blob();
+ if(!(await validPdf(blob)))throw new Error('File bawaan di server bukan PDF valid.');
+ const objectUrl=URL.createObjectURL(blob);
+ showPdf(item.name,objectUrl,true);
+}
 async function openImported(item){const blob=asBlob(item.blob,'application/pdf');if(!(await validPdf(blob)))throw new Error('Data PDF tersimpan rusak/tidak lengkap. Hapus lalu impor ulang file asli.');const url=URL.createObjectURL(blob);showPdf(item.name,url,true);}
 function card(item,builtin=false){const a=document.createElement('article');a.className='rc72-pdf-card';a.innerHTML='<h3></h3><div class="rc72-pdf-meta"></div><div class="rc72-pdf-actions"><button class="action primary" type="button">📖 Buka PDF</button></div>';a.querySelector('h3').textContent='📄 '+item.name;a.querySelector('.rc72-pdf-meta').textContent=builtin?'PDF bawaan aplikasi':`PDF • ${Math.max(1,Math.round((item.size||0)/1024))} KB`;
 a.querySelector('button').onclick=async()=>{try{builtin?await openBuiltin(item):await openImported(item)}catch(e){alert('Gagal membuka PDF: '+(e.message||e))}};if(!builtin){const del=document.createElement('button');del.className='action';del.type='button';del.textContent='Hapus';del.onclick=async()=>{if(confirm('Hapus PDF ini?')){await remove(item.id);await render();document.dispatchEvent(new CustomEvent('rc71-documents-updated'));}};a.querySelector('.rc72-pdf-actions').appendChild(del);}return a;}
