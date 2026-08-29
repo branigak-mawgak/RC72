@@ -13,7 +13,7 @@ Do not alter the Waqi'ah 74–96 numbering/content without a new revision.
 <!-- RC72 V6.2.0 FORCE PDF IMPORT DB MIGRATION -->
 <!-- RC72 V6.1.4 PDF CLOSE CONTROL FIX — PDF overlay z-index + navigation isolation. -->
 <!-- RC46 -->
-<html data-build="RC72-iPad-first-PDF-revision" lang="id">
+<html data-build="RC72-V6.5-PDF-INTEGRITY" lang="id">
 <head>
 <meta content="RC54-STABLE-CANONICAL" name="amalan-build"/>
 <meta charset="utf-8"/>
@@ -4032,107 +4032,10 @@ window.RC72VisualPDFTeleprompter={open,close,start,stop};
      previously imported by RC71/RC72 on the same GitHub Pages origin, it is
      recovered from IndexedDB automatically. -->
 <script id="rc72-auto-open-existing-pdf">
-(()=>{
-'use strict';
-/* RC72 Revision 2 — RC71 PDF bridge.
-   RC71 and RC72 normally share the same GitHub Pages origin, but their
-   IndexedDB database/store names may differ.  Discover the existing PDF
-   instead of assuming RC72_IMPORT_STORAGE is the only database. */
-const TARGET_DB='RC72_IMPORT_STORAGE', TARGET_STORE='documents';
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const pdfLike=(v,name='')=>{
-  try{
-    const type=(v?.type||v?.mime||'').toLowerCase();
-    const nm=(v?.name||name||'').toLowerCase();
-    return type.includes('pdf')||nm.endsWith('.pdf');
-  }catch{return false}
-};
-function findBlob(record){
-  const seen=new WeakSet();
-  function walk(v,key=''){
-    if(v==null)return null;
-    if(v instanceof Blob && (pdfLike(v,key)||v.type==='application/pdf')) return {blob:v,name:key||'Doa Ziarah.pdf',type:v.type||'application/pdf'};
-    if(typeof File!=='undefined' && v instanceof File)return {blob:v,name:v.name||key||'Doa Ziarah.pdf',type:v.type||'application/pdf'};
-    if(typeof v!=='object')return null;
-    if(seen.has(v))return null; seen.add(v);
-    if(v.blob instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.blob,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.blob.type||'application/pdf',created:v.created||v.lastModified||''};
-    if(v.file instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.file,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.file.type||'application/pdf',created:v.created||v.lastModified||''};
-    if(v.data instanceof Blob && pdfLike(v,v.name||key)) return {blob:v.data,name:v.name||key||'Doa Ziarah.pdf',type:v.type||v.mime||v.data.type||'application/pdf',created:v.created||v.lastModified||''};
-    for(const k of Object.keys(v)){
-      const x=v[k];
-      if(x instanceof Blob && (pdfLike(x,v.name||k)||k.toLowerCase().includes('pdf'))) return {blob:x,name:v.name||k||'Doa Ziarah.pdf',type:v.type||v.mime||x.type||'application/pdf',created:v.created||v.lastModified||''};
-      if(x && typeof x==='object' && !(x instanceof ArrayBuffer)){const hit=walk(x,k);if(hit)return hit;}
-    }
-    return null;
-  }
-  return walk(record);
-}
-async function listDbNames(){
-  const names=new Set([TARGET_DB,'RC71_IMPORT_STORAGE','RC71_PDF_STORAGE','amp-media-db','amp-gallery-db']);
-  try{if(indexedDB.databases){for(const d of await indexedDB.databases())if(d?.name)names.add(d.name)}}catch(e){console.warn('[RC72] indexedDB.databases unavailable',e)}
-  return [...names];
-}
-function openDb(name){return new Promise((resolve,reject)=>{const r=indexedDB.open(name);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);r.onupgradeneeded=()=>{try{r.transaction.abort()}catch{}}})}
-async function scanDb(name){
-  let db;try{db=await openDb(name)}catch{return []}
-  const stores=[...db.objectStoreNames]; const out=[];
-  for(const storeName of stores){
-    try{
-      const values=await new Promise((res,rej)=>{const q=db.transaction(storeName,'readonly').objectStore(storeName).getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)});
-      for(const rec of values){const hit=findBlob(rec);if(hit)out.push({...hit,db:name,store:storeName});}
-    }catch(e){console.warn('[RC72] scan store failed',name,storeName,e)}
-  }
-  try{db.close()}catch{}
-  return out;
-}
-function score(x){
-  const n=(x.name||'').toLowerCase(); let s=0;
-  if(n.includes('ziarah'))s+=1000;if(n.includes('doa'))s+=500;if(n.includes('tahlil'))s+=250;if(n.includes('yasin'))s+=150;if(n.endsWith('.pdf'))s+=20;
-  s+=Math.min(100,Math.round((x.blob?.size||0)/100000));
-  const t=Date.parse(x.created||'');if(Number.isFinite(t))s+=Math.max(0,Math.round((t-1700000000000)/1e10));
-  return s;
-}
-async function saveToRc72(x){
-  try{
-    const db=await new Promise((resolve,reject)=>{const r=indexedDB.open(TARGET_DB,4);r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains(TARGET_STORE))d.createObjectStore(TARGET_STORE,{keyPath:'id'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
-    await new Promise((resolve,reject)=>{const q=db.transaction(TARGET_STORE,'readwrite').objectStore(TARGET_STORE).put({id:'rc72-bridge-'+Date.now(),name:x.name||'Doa Ziarah.pdf',type:x.type||'application/pdf',mime:x.type||'application/pdf',blob:x.blob,size:x.blob.size,created:new Date().toISOString(),position:0});q.onsuccess=resolve;q.onerror=()=>reject(q.error)});
-    db.close();
-  }catch(e){console.warn('[RC72] Could not cache bridged PDF',e)}
-}
-async function fetchPdfLinksFromRc71(){
-  const candidates=['../RC71/index.html','/RC71/index.html','https://branigak-mawgak.github.io/RC71/index.html'];
-  for(const u of candidates){
-    try{
-      const r=await fetch(u,{cache:'no-store'});if(!r.ok)continue;const html=await r.text();
-      const urls=[...html.matchAll(/(?:src|href|url|pdf(?:Url|Src)?)[^"'<>]{0,80}["'=:\s]+([^"'<>\s]+\.pdf(?:\?[^"'<>\s]*)?)/ig)].map(m=>m[1]);
-      for(const raw of urls){
-        const url=new URL(raw,u).href;const rr=await fetch(url,{cache:'no-store'});if(!rr.ok)continue;const b=await rr.blob();if(b.type.includes('pdf')||url.toLowerCase().includes('.pdf'))return {blob:b,name:decodeURIComponent(url.split('/').pop().split('?')[0])||'Doa Ziarah.pdf',type:b.type||'application/pdf'};
-      }
-    }catch(e){console.warn('[RC72] RC71 URL bridge failed',u,e)}
-  }
-  return null;
-}
-async function boot(){
-  for(let i=0;i<30;i++){if(typeof window.RC72VisualPDFTeleprompter?.open==='function')break;await sleep(200)}
-  if(window.__RC72_AUTO_PDF_OPENED)return;
-  try{
-    let candidates=[];
-    for(const name of await listDbNames())candidates.push(...await scanDb(name));
-    let chosen=candidates.sort((a,b)=>score(b)-score(a))[0]||null;
-    if(!chosen)chosen=await fetchPdfLinksFromRc71();
-    if(!chosen){
-      console.warn('[RC72] Tidak menemukan PDF dari RC71/IndexedDB.');
-      const st=document.getElementById('rc71VtpStatus');if(st)st.textContent='PDF belum ditemukan dari RC71';
-      return;
-    }
-    window.__RC72_AUTO_PDF_OPENED=true;
-    await saveToRc72(chosen);
-    await sleep(250);
-    await window.RC72VisualPDFTeleprompter.open(chosen);
-  }catch(e){console.error('[RC72] Auto-open RC71 PDF failed:',e)}
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,700),{once:true});else setTimeout(boot,700);
-})();
+/* RC72 V6.5: legacy auto-open disabled. Old RC71 IndexedDB PDFs must never
+   auto-open at startup because stale/corrupt legacy records can produce
+   INVALID PDF STRUCTURE and interrupt the normal Home screen. */
+(()=>{ console.info('[RC72] Legacy PDF auto-open disabled'); })();
 </script>
 <script id="rc72-smart-counter-finetune">
 (()=>{
@@ -4204,7 +4107,7 @@ ensure().then(()=>console.info('[RC72] PDF import database v4 ready')).catch(e=>
 })();
 </script>
 
-<!-- RC72 V6.3.0 — HARD PDF IMPORT REPAIR + BUNDLED LIBRARY -->
+<!-- RC72 V6.5.0 — PDF BYTE VALIDATION + LEGACY AUTO-OPEN DISABLED -->
 <script id="rc72-v630-pdf-library">
 (()=>{
 'use strict';
@@ -4265,5 +4168,100 @@ async function putDoc(file,name=file.name){
  new MutationObserver(()=>bind()).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
+<!-- RC72 V6.5.0 FINAL PDF BYTE INTEGRITY LAYER -->
+<script id="rc72-v650-pdf-byte-integrity">
+(()=>{
+'use strict';
+const DB='RC72_IMPORT_STORAGE',VER=7,STORE='documents';
+const BUILTIN_MAP={
+ 'yasinan.pdf':'library-pdf/YASINAN.pdf',
+ 'wiridan(1).pdf':'library-pdf/WIRIDAN(1).pdf'
+};
+function openDb(){return new Promise((resolve,reject)=>{
+ const r=indexedDB.open(DB,VER);
+ r.onupgradeneeded=()=>{const d=r.result;for(const n of ['library','documents','media'])if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id',autoIncrement:true});};
+ r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error||new Error('IndexedDB tidak dapat dibuka'));
+ });}
+function candidateValue(d){return d?.blob ?? d?.file ?? d?.data ?? d?.content ?? d?.bytes ?? null}
+async function toBlob(value,type='application/pdf'){
+ if(value instanceof Blob)return value.slice(0,value.size,type||value.type||'application/pdf');
+ if(value instanceof ArrayBuffer)return new Blob([value],{type});
+ if(ArrayBuffer.isView(value))return new Blob([value.buffer.slice(value.byteOffset,value.byteOffset+value.byteLength)],{type});
+ if(typeof value==='string'){
+   const t=value.trim();
+   if(t.startsWith('data:')){const b64=t.split(',')[1]||'';const bin=atob(b64);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type});}
+   try{const bin=atob(t.replace(/\s/g,''));const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type});}catch{}
+ }
+ throw new Error('Data PDF lama tidak memiliki format biner yang valid');
+}
+async function isPdfBlob(b){
+ if(!(b instanceof Blob)||b.size<5)return false;
+ const a=new Uint8Array(await b.slice(0,1024).arrayBuffer());
+ for(let i=0;i<=a.length-5;i++)if(a[i]===37&&a[i+1]===80&&a[i+2]===68&&a[i+3]===70&&a[i+4]===45)return true;
+ return false;
+}
+async function normalizedBlob(d){
+ const name=(d?.name||'').toLowerCase();
+ // Bundled files are always loaded from their original immutable repository URL.
+ // This bypasses any stale/corrupt IndexedDB copy left by older RC72 versions.
+ const url=d?.builtinUrl||BUILTIN_MAP[name];
+ if(url){try{const r=await fetch(url,{cache:'no-store'});if(r.ok){const b=await r.blob();if(await isPdfBlob(b))return b.slice(0,b.size,'application/pdf');}}catch(e){console.warn('builtin PDF fetch',e)}}
+ const b=await toBlob(candidateValue(d),d?.type||d?.mime||'application/pdf');
+ if(!(await isPdfBlob(b)))throw new Error('INVALID PDF STRUCTURE — data PDF tersimpan dari versi lama tidak valid. Hapus entri ini lalu impor ulang file PDF asli.');
+ return b.slice(0,b.size,'application/pdf');
+}
+async function getAll(){const db=await openDb();try{return await new Promise((ok,no)=>{const q=db.transaction(STORE,'readonly').objectStore(STORE).getAll();q.onsuccess=()=>ok(q.result||[]);q.onerror=()=>no(q.error)})}finally{db.close()}}
+async function put(file,name=file.name,meta={}){
+ const raw=file instanceof Blob?file:await toBlob(file,'application/pdf');
+ const b=raw.slice(0,raw.size,'application/pdf');
+ if(!(await isPdfBlob(b)))throw new Error('File bukan PDF yang valid');
+ const db=await openDb();try{await new Promise((ok,no)=>{const os=db.transaction(STORE,'readwrite').objectStore(STORE);const q=os.add({name:name||'Dokumen.pdf',type:'application/pdf',mime:'application/pdf',size:b.size,blob:b,createdAt:Date.now(),source:'RC72-V6.5',...meta});q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}finally{db.close()}
+}
+async function seed(){
+ const rows=await getAll();const names=new Set(rows.map(x=>(x.name||'').toLowerCase()));
+ for(const [name,url] of Object.entries(BUILTIN_MAP)){
+   if(names.has(name))continue;
+   try{const r=await fetch(url,{cache:'no-store'});const b=await r.blob();await put(b,Object.keys(BUILTIN_MAP).find(k=>k===name).replace(name==='yasinan.pdf'?'yasinan.pdf':'wiridan(1).pdf',name),{builtinUrl:url,builtin:true});}catch(e){console.warn('seed',e)}
+ }
+}
+async function open(d){
+ const b=await normalizedBlob(d);
+ // Always create fresh bytes. Never pass an IndexedDB-owned buffer to PDF.js.
+ const fresh=()=>b.slice(0,b.size,'application/pdf').arrayBuffer().then(x=>new Uint8Array(x));
+ if(typeof window.__rc72OpenVisualPdf==='function'){
+   const clean={...d,blob:b.slice(0,b.size,'application/pdf')};
+   return window.__rc72OpenVisualPdf(clean);
+ }
+ const u=URL.createObjectURL(b);const f=document.getElementById('rc71PdfFrame');if(f)f.src=u;
+}
+async function importFiles(files){let n=0;for(const f of Array.from(files||[])){const b=await toBlob(f,'application/pdf');if(!(await isPdfBlob(b)))continue;await put(b,f.name||'Dokumen.pdf');n++;}if(!n)throw new Error('Tidak ada PDF valid yang dipilih');document.dispatchEvent(new CustomEvent('rc72-documents-updated'));return n}
+window.RC72PdfBytes={normalizedBlob,isPdfBlob,open,importFiles,put,getAll};
+// Replace all common open entry points after legacy scripts are loaded.
+window.openPdfReader=async d=>{try{return await open(d)}catch(e){alert(e.message||e);throw e}};
+window.__rc72OpenPdfValidated=open;
+// Replace Library button handling on each update.
+async function wire(){
+ const box=document.getElementById('libraryPdfList');if(!box)return;
+ const rows=await getAll();const pdfs=rows.filter(x=>/pdf/i.test(x.type||'')||/\.pdf$/i.test(x.name||''));
+ box.innerHTML=pdfs.map((x,i)=>`<article class="lib-card"><div class="rc35-lib-title"><h3>📄 ${String(x.name||'PDF').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</h3><span class="chip">PDF</span></div><div class="compact-actions"><button class="primary" type="button" data-v650-open="${i}">Buka PDF</button><button type="button" data-v650-del="${i}">Hapus</button></div></article>`).join('');
+ box.querySelectorAll('[data-v650-open]').forEach(b=>b.onclick=async()=>{try{await open(pdfs[+b.dataset.v650Open])}catch(e){alert('Gagal membuka PDF: '+(e.message||e))}});
+ box.querySelectorAll('[data-v650-del]').forEach(b=>b.onclick=async()=>{const d=pdfs[+b.dataset.v650Del];const db=await openDb();try{await new Promise((ok,no)=>{const q=db.transaction(STORE,'readwrite').objectStore(STORE).delete(d.id);q.onsuccess=ok;q.onerror=()=>no(q.error)});await wire()}finally{db.close()}});
+}
+async function init(){try{await seed();await wire()}catch(e){console.warn('V6.5 init',e)}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,50),{once:true});else setTimeout(init,50);
+document.addEventListener('rc72-documents-updated',()=>setTimeout(wire,0));
+// Intercept legacy Gallery Media buttons before their old PDF.js handler runs.
+document.addEventListener('click',async e=>{
+ const btn=e.target.closest?.('[data-open]');if(!btn)return;
+ const card=btn.closest('.media-card');const name=card?.querySelector('.media-card-title')?.textContent?.trim();if(!name)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ try{const rows=await getAll();const d=rows.find(x=>(x.name||'')===name);if(!d)throw new Error('PDF tidak ditemukan');await open(d)}catch(err){alert('Gagal membuka PDF: '+(err.message||err))}
+},true);
+// Capture import before legacy handlers and store validated bytes only.
+document.addEventListener('change',async e=>{const inp=e.target;if(inp?.id!=='importDocumentFile'&&inp?.id!=='mediaImportPdfInput')return;e.stopImmediatePropagation();try{const n=await importFiles(inp.files);alert(n+' PDF berhasil diimpor ke Library Bacaan');await wire()}catch(err){alert('Impor PDF gagal: '+(err.message||err))}finally{inp.value=''}},true);
+})();
+</script>
+
 <script>(()=>{if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}})();</script></body>
 </html>
