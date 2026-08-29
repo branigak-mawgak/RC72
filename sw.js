@@ -1,4 +1,4 @@
-const CACHE='rc71-pwa-pdf-r2';
+const CACHE='rc71-pwa-pdf-r3';
 const CORE=['./','./index.html','./manifest.webmanifest','./YASINAN.pdf','./WIRIDAN(1).pdf'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('rc71-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

@@ -2817,14 +2817,29 @@ window.renderBlocks=(container,blocks)=>{if(!container)return;container.replaceC
 <script id="rc71-import-storage-engine">
 (function(){
 'use strict';
-const DB_NAME='RC71_IMPORT_STORAGE',DB_VER=2;
+const DB_NAME='RC71_IMPORT_STORAGE';
 let dbp;
-function openDB(){if(dbp)return dbp;dbp=new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,DB_VER);
-r.onupgradeneeded=()=>{const d=r.result;
-if(!d.objectStoreNames.contains('library'))d.createObjectStore('library',{keyPath:'id',autoIncrement:true});
-if(!d.objectStoreNames.contains('documents'))d.createObjectStore('documents',{keyPath:'id',autoIncrement:true});
-if(!d.objectStoreNames.contains('media'))d.createObjectStore('media',{keyPath:'id',autoIncrement:true});};
-r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return dbp}
+const REQUIRED_STORES=['library','documents','media'];
+function createMissingStores(db){for(const name of REQUIRED_STORES){if(!db.objectStoreNames.contains(name))db.createObjectStore(name,{keyPath:'id',autoIncrement:true});}}
+function openDB(){
+ if(dbp)return dbp;
+ dbp=new Promise((resolve,reject)=>{
+  // Never request a fixed/lower IndexedDB version. Previous RC71 builds may
+  // already have upgraded this database, which otherwise throws VersionError.
+  const r=indexedDB.open(DB_NAME);
+  r.onupgradeneeded=()=>createMissingStores(r.result);
+  r.onsuccess=()=>{
+   const db=r.result;
+   if(REQUIRED_STORES.every(name=>db.objectStoreNames.contains(name))){resolve(db);return;}
+   const next=db.version+1;db.close();
+   const up=indexedDB.open(DB_NAME,next);
+   up.onupgradeneeded=()=>createMissingStores(up.result);
+   up.onsuccess=()=>resolve(up.result);up.onerror=()=>reject(up.error);
+  };
+  r.onerror=()=>reject(r.error);
+ });
+ return dbp;
+}
 async function put(store,v){const d=await openDB();return new Promise((ok,no)=>{const q=d.transaction(store,'readwrite').objectStore(store).add(v);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)})}
 function notify(s){if(typeof window.showToast==='function')window.showToast(s);else if(typeof window.toast==='function')window.toast(s);else console.log(s)}
 async function zipEntries(buf){
@@ -3806,7 +3821,7 @@ function findPdfFromTarget(target){
  }
  return null;
 }
-async function getDocs(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC71_IMPORT_STORAGE',2);r.onsuccess=()=>{const db=r.result;const q=db.transaction('documents','readonly').objectStore('documents').getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
+async function getDocs(){return new Promise((resolve,reject)=>{const r=indexedDB.open('RC71_PDF_LIBRARY');r.onsuccess=()=>{const db=r.result;if(!db.objectStoreNames.contains('pdfs')){db.close();reject(new Error('Koleksi PDF belum tersedia.'));return;}const q=db.transaction('pdfs','readonly').objectStore('pdfs').getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>reject(q.error)};r.onerror=()=>reject(r.error)})}
 async function openByName(name){const docs=await getDocs();const d=docs.find(x=>(x.name||'')===name);if(d)await open(d);else alert('File PDF tidak ditemukan di penyimpanan impor.')}
 // Capture before the old text-extraction Teleprompter handlers. This preserves the PDF page exactly, including its original colors.
 document.addEventListener('click',async e=>{
